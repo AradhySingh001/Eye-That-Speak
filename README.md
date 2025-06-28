@@ -10,6 +10,8 @@ Camera Integration: Processes live camera feed with visual overlays for system s
 Text-to-Speech: Announces system status, detected objects, and navigation updates using a customizable voice.
 Error Handling: Robust error handling for camera, model, and speech recognition failures.
 User Interface: Displays real-time video feed with annotated object detection boxes and system status overlays.
+
+
 Dependencies
 ultralytics (for YOLOv8)
 opencv-python (for camera and image processing)
@@ -17,21 +19,29 @@ pyttsx3 (for text-to-speech)
 speechrecognition (for voice command recognition)
 pyaudio (for microphone input)
 requests (for GPS functionality via IP-API)
+
+
 Voice Commands
 Mode Switching: "switch to detection", "switch to gps", "what mode"
 Object Detection: "start detection", "stop detection", "what do you see", "find [object]", "count [objects]"
 GPS Navigation: "where am I", "navigate to [place]", "save location as [name]", "distance to [place]", "stop navigation"
 System Commands: "help", "system status", "test camera", "exit"
+
+
 System Requirements
 Python 3.6+
 Compatible webcam
 Microphone for voice input
 Internet connection for GPS functionality
+
+
 Notes
 Ensure proper camera and microphone permissions.
 The system supports fallback camera indices and ambient noise calibration for robust performance.
 GPS functionality uses a basic IP-based location service; a real implementation would require more sophisticated GPS hardware integration.
 The YOLOv8 model (yolov8n.pt) must be available in the working directory or downloaded automatically.
+
+
 Future Improvements
 Implement actual turn-by-turn navigation with GPS hardware.
 Enhance object detection with custom-trained models for specific use cases.
