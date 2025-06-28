@@ -1,8 +1,8 @@
-Project: Integrated Smart Glasses System
-
+Project: Integrated Smart Glasses System  
+  
 This repository contains a Python implementation of an Integrated Smart Glasses System that combines object detection and GPS navigation with unified voice control. The system leverages computer vision, speech recognition, and text-to-speech functionalities to provide an interactive, hands-free experience for users.
 
-Key Features
+Key Features  
 Object Detection: Utilizes YOLOv8 for real-time object detection, allowing users to identify and count objects in the camera's view.
 GPS Navigation: Provides location-based services, including current location retrieval, navigation to destinations, and saving locations.
 Voice Control: Supports unified voice commands for seamless switching between detection and GPS modes, with commands like "find [object]," "navigate to [place]," and "where am I."
@@ -12,7 +12,7 @@ Error Handling: Robust error handling for camera, model, and speech recognition 
 User Interface: Displays real-time video feed with annotated object detection boxes and system status overlays.
 
 
-Dependencies
+Dependencies  
 ultralytics (for YOLOv8)
 opencv-python (for camera and image processing)
 pyttsx3 (for text-to-speech)
@@ -21,21 +21,21 @@ pyaudio (for microphone input)
 requests (for GPS functionality via IP-API)
 
 
-Voice Commands
+Voice Commands  
 Mode Switching: "switch to detection", "switch to gps", "what mode"
 Object Detection: "start detection", "stop detection", "what do you see", "find [object]", "count [objects]"
 GPS Navigation: "where am I", "navigate to [place]", "save location as [name]", "distance to [place]", "stop navigation"
 System Commands: "help", "system status", "test camera", "exit"
 
 
-System Requirements
+System Requirements  
 Python 3.6+
 Compatible webcam
 Microphone for voice input
 Internet connection for GPS functionality
 
 
-Notes
+Notes  
 Ensure proper camera and microphone permissions.
 The system supports fallback camera indices and ambient noise calibration for robust performance.
 GPS functionality uses a basic IP-based location service; a real implementation would require more sophisticated GPS hardware integration.
