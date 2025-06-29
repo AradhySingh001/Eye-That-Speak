@@ -124,4 +124,4 @@ xAI for inspiration and tools.
 Notes
 Customization: Replace yourusername with your GitHub username and [Your Name or GitHub Username] with your name or handle. Add a LICENSE file if not already present.
 
-Future Enhancements: The GPS distance calculation is noted as a future feature; you can expand this section as you implement it.
+Future Enhancements: The GPS distance calculation is noted as a future feature.
