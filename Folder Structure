@@ -1,0 +1,19 @@
+smart_glasses/
+├── __pycache__/
+├── .dist/
+├── smart_glasses_env/
+├── templates/
+│   ├── index.html
+│   
+├── app.py
+├── cmake-installer.exe
+├── face_database.pkl
+├── face_names.json
+├── nul
+├── requirements.txt
+├── smart_glasses_location.py
+├── smart_glasses_main.py
+├── tesseract-installer.exe
+├── tesseract-ocr.exe
+├── vosk-model-small-en-us-0.15/
+└── yolov8n.pt
