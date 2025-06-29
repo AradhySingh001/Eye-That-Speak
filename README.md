@@ -35,7 +35,9 @@ bash
 
 python -m venv smart_glasses_env
 smart_glasses_env\Scripts\activate  # On Windows
-# Or on macOS/Linux: source smart_glasses_env/bin/activate
+
+                        Or
+# on macOS/Linux: source smart_glasses_env/bin/activate
 Install Python Dependencies Create or update requirements.txt with the following content and run:
 bash
 
