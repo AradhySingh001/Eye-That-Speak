@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Glasses</title>
+  <style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: white;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.title {
+    font-size: 3rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, #e8d5ff, #fbb6ce);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Card Styles */
+.card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.card-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.card-content {
+    padding: 20px;
+}
+
+/* Main Grid Layout */
+.main-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+@media (max-width: 1024px) {
+    .main-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Video Feed Styles */
+.live-indicator {
+    width: 12px;
+    height: 12px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.video-container {
+    position: relative;
+}
+
+.video-feed {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.video-overlay {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+}
+
+/* Status Section */
+.status-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.status-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-label {
+    color: rgba(255, 255, 255, 0.8);
+    text-transform: capitalize;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: white;
+}
+
+.status-active {
+    background: #10b981;
+}
+
+.status-inactive {
+    background: #ef4444;
+}
+
+.status-warning {
+    background: #f59e0b;
+}
+
+/* Button Styles */
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #8b5cf6, #ec4899);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(45deg, #7c3aed, #db2777);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    font-size: 0.75rem;
+    padding: 8px 12px;
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Quick Commands Grid */
+.quick-commands {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-top: 16px;
+}
+
+/* Command Section */
+.command-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 768px) {
+    .command-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+.command-input {
+    display: flex;
+    gap: 12px;
+}
+
+.input {
+    flex: 1;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+}
+
+.input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.input:focus {
+    outline: none;
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.separator {
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 20px 0;
+}
+
+.available-commands {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.commands-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+    margin-top: 8px;
+    font-size: 0.75rem;
+}
+
+/* Captured Image */
+.captured-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Footer */
+.footer {
+    text-align: center;
+    margin-top: 40px;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.875rem;
+}
+
+/* Toast Notifications */
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    min-width: 300px;
+    animation: slideIn 0.3s ease-out;
+}
+
+.toast-success {
+    border-left: 4px solid #10b981;
+}
+
+.toast-error {
+    border-left: 4px solid #ef4444;
+}
+
+.toast-title {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.toast-description {
+    font-size: 0.875rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Loading Animation */
+.loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+.commands-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .command-item {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid #8b5cf6;
+        }
+        
+        .command-item strong {
+            color: #e8d5ff;
+        }
+  </style>
+</head>
+<body>
+     <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="title">Smart Glasses Control Panel</h1>
+            <p class="subtitle">Advanced AI-Powered Vision System</p>
+        </header>
+
+        <!-- Main Content Grid -->
+        <div class="main-grid">
+            <!-- Video Feed Section -->
+            <div class="video-section">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="live-indicator"></div>
+                        <h3>Live Camera Feed</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="video-container">
+                            <img id="video-feed" src="/video_feed" alt="Smart Glasses Feed" class="video-feed">
+                            <div class="video-overlay">
+                                <span id="current-mode">Mode: idle</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Status Section -->
+            <div class="status-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>System Status</h3>
+                    </div>
+                    <div class="card-content">
+                        <div id="status-list" class="status-list">
+                            <!-- Status items will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Quick Actions</h3>
+                    </div>
+                    <div class="card-content">
+                        <button id="capture-btn" class="btn btn-primary">Capture Image</button>
+                        <div class="quick-commands">
+                            <button class="btn btn-secondary" data-command="start detection">Start Detection</button>
+                            <button class="btn btn-secondary" data-command="stop detection">Stop Detection</button>
+                            <button class="btn btn-secondary" data-command="read text">Read Text</button>
+                            <button class="btn btn-secondary" data-command="recognize faces">Recognize Faces</button>
+                            <button class="btn btn-secondary" data-command="navigation mode">Navigation</button>
+                            <button class="btn btn-secondary" data-command="reset system">Reset System</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Command Interface -->
+        <div class="command-section">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Voice Command Interface</h3>
+                </div>
+                <div class="card-content">
+                    <div class="command-input">
+                        <input type="text" id="command-input" placeholder="Enter voice command..." class="input">
+                        <button id="send-command" class="btn btn-primary">Send</button>
+                    </div>
+                    <div class="separator"></div>
+                    <div class="available-commands">
+                        <strong>Available Commands:</strong>
+                        <div class="commands-grid">
+                            <div>• start detection</div>
+                            <div>• stop detection</div>
+                            <div>• read text</div>
+                            <div>• recognize faces</div>
+                            <div>• take photo</div>
+                            <div>• navigation mode</div>
+                            <div>• reset system</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Captured Image Display -->
+            <div id="captured-image-section" class="card" style="display: none;">
+                <div class="card-header">
+                    <h3>Latest Capture</h3>
+                </div>
+                <div class="card-content">
+                    <img id="captured-image" src="" alt="Captured Image" class="captured-image">
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Smart Glasses System v2.0 | Real-time AI Processing</p>
+        </footer>
+
+        <!-- Toast Notifications -->
+        <div id="toast-container" class="toast-container"></div>
+    </div>
+      <div class="container">
+        <header class="header">
+            <h1 class="title">System Status</h1>
+            <p class="subtitle">Real-time Smart Glasses System Information</p>
+        </header>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Current System Status</h3>
+            </div>
+            <div class="card-content">
+                <div class="status-list">
+                    {% for key, value in status.items() %}
+                    <div class="status-item">
+                        <span class="status-label">{{ key.replace('_', ' ').title() }}:</span>
+                        <span class="status-badge 
+                            {% if 'active' in value.lower() or 'working' in value.lower() or 'loaded' in value.lower() or value == 'Active' %}
+                                status-active
+                            {% elif 'inactive' in value.lower() or 'not' in value.lower() or value == 'Inactive' %}
+                                status-inactive
+                            {% else %}
+                                status-warning
+                            {% endif %}
+                        ">{{ value }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/" class="btn btn-primary">Back to Control Panel</a>
+        </div>
+
+        <footer class="footer">
+            <p>Smart Glasses System v2.0 | Real-time AI Processing</p>
+        </footer>
+    </div>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Available Commands</h1>
+            <p class="subtitle">Voice and Text Commands for Smart Glasses System</p>
+        </header>
+
+        <div class="main-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Detection Commands</h3>
+                </div>
+                <div class="card-content">
+                    <div class="commands-list">
+                        <div class="command-item">
+                            <strong>start detection</strong> - Begin object detection mode
+                        </div>
+                        <div class="command-item">
+                            <strong>stop detection</strong> - End object detection mode
+                        </div>
+                        <div class="command-item">
+                            <strong>increase confidence</strong> - Raise detection threshold
+                        </div>
+                        <div class="command-item">
+                            <strong>decrease confidence</strong> - Lower detection threshold
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Text & Recognition Commands</h3>
+                </div>
+                <div class="card-content">
+                    <div class="commands-list">
+                        <div class="command-item">
+                            <strong>read text</strong> - Activate text reading mode
+                        </div>
+                        <div class="command-item">
+                            <strong>recognize faces</strong> - Start face recognition
+                        </div>
+                        <div class="command-item">
+                            <strong>learn face</strong> - Add new face to database
+                        </div>
+                        <div class="command-item">
+                            <strong>take photo</strong> - Capture current frame
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Navigation Commands</h3>
+                </div>
+                <div class="card-content">
+                    <div class="commands-list">
+                        <div class="command-item">
+                            <strong>navigation mode</strong> - Enable navigation assistance
+                        </div>
+                        <div class="command-item">
+                            <strong>stop navigation</strong> - Disable navigation
+                        </div>
+                        <div class="command-item">
+                            <strong>describe scene</strong> - Get scene description
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>System Commands</h3>
+                </div>
+                <div class="card-content">
+                    <div class="commands-list">
+                        <div class="command-item">
+                            <strong>reset system</strong> - Reset all modes to default
+                        </div>
+                        <div class="command-item">
+                            <strong>status</strong> - Get system status
+                        </div>
+                        <div class="command-item">
+                            <strong>help</strong> - Show available commands
+                        </div>
+                        <div class="command-item">
+                            <strong>shutdown</strong> - Safely shutdown system
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/" class="btn btn-primary">Back to Control Panel</a>
+        </div>
+
+        <footer class="footer">
+            <p>Smart Glasses System v2.0 | Real-time AI Processing</p>
+        </footer>
+    </div>
+<script> 
+    class SmartGlassesUI {
+    constructor() {
+        this.isLoading = false;
+        this.init();
+    }
+
+    init() {
+        this.setupEventListeners();
+        this.startStatusUpdates();
+        this.refreshVideoFeed();
+    }
+
+    setupEventListeners() {
+        // Command input
+        const commandInput = document.getElementById('command-input');
+        const sendButton = document.getElementById('send-command');
+        
+        sendButton.addEventListener('click', () => this.sendCommand());
+        commandInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.sendCommand();
+        });
+
+        // Quick command buttons
+        document.querySelectorAll('[data-command]').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const command = e.target.getAttribute('data-command');
+                document.getElementById('command-input').value = command;
+                this.sendCommand();
+            });
+        });
+
+        // Capture image button
+        document.getElementById('capture-btn').addEventListener('click', () => {
+            this.captureImage();
+        });
+    }
+
+    async sendCommand() {
+        const commandInput = document.getElementById('command-input');
+        const command = commandInput.value.trim();
+        
+        if (!command) return;
+
+        this.setLoading(true);
+        
+        try {
+            const response = await fetch('/command', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ command }),
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                this.showToast('Command Sent', data.message, 'success');
+                commandInput.value = '';
+            } else {
+                this.showToast('Error', data.message, 'error');
+            }
+        } catch (error) {
+            this.showToast('Error', 'Failed to send command', 'error');
+            console.error('Command error:', error);
+        } finally {
+            this.setLoading(false);
+        }
+    }
+
+    async captureImage() {
+        this.setLoading(true);
+        
+        try {
+            const response = await fetch('/capture_image', {
+                method: 'POST',
+            });
+            
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                const imageSection = document.getElementById('captured-image-section');
+                const imageElement = document.getElementById('captured-image');
+                
+                imageElement.src = `data:image/jpeg;base64,${data.image}`;
+                imageSection.style.display = 'block';
+                
+                this.showToast('Image Captured', 'Successfully captured image from camera', 'success');
+            } else {
+                this.showToast('Error', data.message, 'error');
+            }
+        } catch (error) {
+            this.showToast('Error', 'Failed to capture image', 'error');
+            console.error('Capture error:', error);
+        } finally {
+            this.setLoading(false);
+        }
+    }
+
+    async fetchStatus() {
+        try {
+            const response = await fetch('/status');
+            if (response.ok) {
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
+                    this.updateStatus(data);
+                } else {
+                    // If it's HTML (like the current Flask route), we need to handle it differently
+                    console.log('Status endpoint returned HTML, need JSON endpoint');
+                }
+            }
+        } catch (error) {
+            console.error('Failed to fetch status:', error);
+        }
+    }
+
+    updateStatus(status) {
+        // Update current mode in video overlay
+        document.getElementById('current-mode').textContent = `Mode: ${status.current_mode}`;
+        
+        // Update status list
+        const statusList = document.getElementById('status-list');
+        statusList.innerHTML = '';
+        
+        Object.entries(status).forEach(([key, value]) => {
+            const statusItem = document.createElement('div');
+            statusItem.className = 'status-item';
+            
+            const label = document.createElement('span');
+            label.className = 'status-label';
+            label.textContent = key.replace('_', ' ') + ':';
+            
+            const badge = document.createElement('span');
+            badge.className = `status-badge ${this.getStatusClass(value.toString())}`;
+            badge.textContent = value.toString();
+            
+            statusItem.appendChild(label);
+            statusItem.appendChild(badge);
+            statusList.appendChild(statusItem);
+        });
+    }
+
+    getStatusClass(value) {
+        if (value.includes('active') || value.includes('working') || value.includes('loaded') || value === 'Active') {
+            return 'status-active';
+        }
+        if (value.includes('inactive') || value.includes('not') || value === 'Inactive') {
+            return 'status-inactive';
+        }
+        return 'status-warning';
+    }
+
+    refreshVideoFeed() {
+        const videoFeed = document.getElementById('video-feed');
+        
+        // Refresh video feed periodically
+        setInterval(() => {
+            if (videoFeed) {
+                videoFeed.src = `/video_feed?${Date.now()}`;
+            }
+        }, 100);
+    }
+
+    startStatusUpdates() {
+        // Fetch status immediately
+        this.fetchStatus();
+        
+        // Then fetch every 2 seconds
+        setInterval(() => {
+            this.fetchStatus();
+        }, 2000);
+    }
+
+    setLoading(loading) {
+        this.isLoading = loading;
+        const sendButton = document.getElementById('send-command');
+        const captureButton = document.getElementById('capture-btn');
+        
+        if (loading) {
+            sendButton.textContent = 'Processing...';
+            sendButton.disabled = true;
+            captureButton.disabled = true;
+        } else {
+            sendButton.textContent = 'Send';
+            sendButton.disabled = false;
+            captureButton.disabled = false;
+        }
+    }
+
+    showToast(title, message, type = 'success') {
+        const toastContainer = document.getElementById('toast-container');
+        
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        
+        toast.innerHTML = `
+            <div class="toast-title">${title}</div>
+            <div class="toast-description">${message}</div>
+        `;
+        
+        toastContainer.appendChild(toast);
+        
+        // Remove toast after 5 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 5000);
+    }
+}
+
+// Initialize the UI when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new SmartGlassesUI();
+});
+        // Auto-refresh status every 3 seconds
+        setTimeout(() => {
+            window.location.reload();
+        }, 3000);
+    
+</script>
+</body>
+</html>
