@@ -1,10 +1,10 @@
-#Smart Glasses 
+# Smart Glasses 
 
 
 A comprehensive AI-powered smart glasses system that combines object detection, GPS navigation, text reading, and facial recognition with unified voice control.
 
 
-Key Highlights:
+# Key Highlights:
 
 🔍 Real-time Object Detection using YOLOv8
 
@@ -105,7 +105,7 @@ ________________________________________________________________________________
 
 
 
-Voice Commands Reference
+# Voice Commands Reference
 Mode Switching
 "switch to detection" - Object detection mode
 
@@ -180,7 +180,7 @@ System Commands
 
 "exit" or "quit" - Close application
 ____________________________________________________________________________________________________________________________________________________________________________________________________________________
-Web Interface Features
+# Web Interface Features
 Camera Feed
 Live Streaming: Real-time camera feed with AI processing overlays
 
@@ -224,7 +224,7 @@ f - Instant face recognition
 ____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 
-#SMART GLASSES WITH FACIAL RECOGNITION - SETUP GUIDE
+# SMART GLASSES WITH FACIAL RECOGNITION - SETUP GUIDE
 ==================================================
 
 STEP 1: SYSTEM REQUIREMENTS CHECK
@@ -511,7 +511,7 @@ NEXT STEPS
 ____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 
-#Main Setup Steps:
+# Main Setup Steps:
 
 System Requirements Check
 Install System Dependencies (Windows/Ubuntu/macOS specific)
