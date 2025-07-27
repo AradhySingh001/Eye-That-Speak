@@ -3,842 +3,945 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Glasses</title>
-  <style>
-    * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+    <title>Smart Glasses - Advanced AI Interface</title>
+    
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --accent-gradient: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --blur-sm: blur(8px);
+        }
 
-body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    min-height: 100vh;
-    color: white;
-}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-.container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 20px;
-}
+        body {
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--primary-gradient);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-/* Header Styles */
-.header {
-    text-align: center;
-    margin-bottom: 40px;
-}
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-sm);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            position: relative;
+        }
 
-.title {
-    font-size: 3rem;
-    font-weight: bold;
-    background: linear-gradient(45deg, #e8d5ff, #fbb6ce);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin-bottom: 16px;
-}
+        .header {
+            background: var(--dark-gradient);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
 
-.subtitle {
-    font-size: 1.2rem;
-    color: rgba(255, 255, 255, 0.8);
-}
+        .header h1 {
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-/* Card Styles */
-.card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
-    margin-bottom: 24px;
-    overflow: hidden;
-}
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
 
-.card-header {
-    padding: 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
+        .status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: var(--blur-sm);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
 
-.card-header h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-}
+        .connection-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
 
-.card-content {
-    padding: 20px;
-}
+        .connection-indicator.connected {
+            background: var(--success-color);
+            color: white;
+            animation: pulse 2s infinite;
+        }
 
-/* Main Grid Layout */
-.main-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 24px;
-    margin-bottom: 24px;
-}
+        .connection-indicator.disconnected {
+            background: var(--danger-color);
+            color: white;
+        }
 
-@media (max-width: 1024px) {
-    .main-grid {
-        grid-template-columns: 1fr;
-    }
-}
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
 
-/* Video Feed Styles */
-.live-indicator {
-    width: 12px;
-    height: 12px;
-    background: #ef4444;
-    border-radius: 50%;
-    animation: pulse 2s infinite;
-}
+        .system-metrics {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
 
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
+        .metric {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-.video-container {
-    position: relative;
-}
-
-.video-feed {
-    width: 100%;
-    height: 320px;
-    object-fit: cover;
-    border-radius: 12px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.video-overlay {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    background: rgba(0, 0, 0, 0.5);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.875rem;
-}
-
-/* Status Section */
-.status-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.status-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.status-label {
-    color: rgba(255, 255, 255, 0.8);
-    text-transform: capitalize;
-}
-
-.status-badge {
-    padding: 4px 12px;
-    border-radius: 12px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: white;
-}
-
-.status-active {
-    background: #10b981;
-}
-
-.status-inactive {
-    background: #ef4444;
-}
-
-.status-warning {
-    background: #f59e0b;
-}
-
-/* Button Styles */
-.btn {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
-    display: inline-block;
-    text-align: center;
-}
-
-.btn-primary {
-    background: linear-gradient(45deg, #8b5cf6, #ec4899);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: linear-gradient(45deg, #7c3aed, #db2777);
-    transform: translateY(-1px);
-}
-
-.btn-secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: rgba(255, 255, 255, 0.9);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    font-size: 0.75rem;
-    padding: 8px 12px;
-}
-
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.2);
-}
-
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-/* Quick Commands Grid */
-.quick-commands {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    margin-top: 16px;
-}
-
-/* Command Section */
-.command-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 24px;
-}
-
-@media (max-width: 768px) {
-    .command-section {
-        grid-template-columns: 1fr;
-    }
-}
-
-.command-input {
-    display: flex;
-    gap: 12px;
-}
-
-.input {
-    flex: 1;
-    padding: 12px 16px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    color: white;
-    font-size: 1rem;
-}
-
-.input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.input:focus {
-    outline: none;
-    border-color: #8b5cf6;
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-}
-
-.separator {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.2);
-    margin: 20px 0;
-}
-
-.available-commands {
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-.commands-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 4px;
-    margin-top: 8px;
-    font-size: 0.75rem;
-}
-
-/* Captured Image */
-.captured-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 12px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-/* Footer */
-.footer {
-    text-align: center;
-    margin-top: 40px;
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.875rem;
-}
-
-.toast-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
-.toast {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 12px;
-    min-width: 300px;
-    animation: slideIn 0.3s ease-out;
-}
-
-.toast-success {
-    border-left: 4px solid #10b981;
-}
-
-.toast-error {
-    border-left: 4px solid #ef4444;
-}
-
-.toast-title {
-    font-weight: 600;
-    margin-bottom: 4px;
-}
-
-.toast-description {
-    font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.8);
-}
-
-@keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-/* Loading Animation */
-.loading {
-    opacity: 0.7;
-    pointer-events: none;
-}
-
-.loading::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin: -10px 0 0 -10px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-top: 2px solid white;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-.commands-list {
+        /* CENTERED CAMERA LAYOUT */
+        .main-content {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            align-items: center;
+            gap: 30px;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-        
-        .command-item {
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.05);
+
+        /* Camera Section - Centered and Primary */
+        .video-section {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: var(--blur-sm);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        .camera-container {
+            width: 100%;
+            max-width: 720px;
+            height: 540px;
+            background: #000;
+            border-radius: 16px;
+            margin: 0 auto 25px auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            border: 3px solid var(--info-color);
+        }
+
+        /* Control Panel - Below Camera */
+        .control-panel {
+            width: 100%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: var(--blur-sm);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .section-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid;
+            border-image: var(--secondary-gradient) 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .camera-stream {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 13px;
+        }
+
+        .camera-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #1a1a1a 25%, transparent 25%),
+                        linear-gradient(-45deg, #1a1a1a 25%, transparent 25%),
+                        linear-gradient(45deg, transparent 75%, #1a1a1a 75%),
+                        linear-gradient(-45deg, transparent 75%, #1a1a1a 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            font-size: 1.2em;
+            animation: loading 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes loading {
+            from { opacity: 0.6; }
+            to { opacity: 1; }
+        }
+
+        .camera-overlay {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: var(--blur-sm);
+            color: white;
+            padding: 10px 15px;
             border-radius: 8px;
-            border-left: 3px solid #8b5cf6;
+            font-size: 1em;
+            font-weight: 600;
+            border: 2px solid var(--success-color);
         }
-        
-        .command-item strong {
-            color: #e8d5ff;
+
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
         }
-  </style>
+
+        .mode-card {
+            padding: 20px;
+            border: 2px solid transparent;
+            border-radius: 16px;
+            background: linear-gradient(white, white) padding-box,
+                        var(--secondary-gradient) border-box;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--secondary-gradient);
+            transition: left 0.3s ease;
+            z-index: 0;
+        }
+
+        .mode-card.active::before {
+            left: 0;
+        }
+
+        .mode-card.active {
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .mode-card-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .mode-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .mode-title {
+            font-weight: 600;
+            font-size: 1.1em;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .status-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-sm);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .status-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--info-color);
+            margin-bottom: 5px;
+        }
+
+        .status-label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .cmd-btn {
+            padding: 15px 20px;
+            border: none;
+            border-radius: 12px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-sm);
+            border: 2px solid var(--glass-border);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.95em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cmd-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--info-color);
+            transition: left 0.3s ease;
+            z-index: 0;
+        }
+
+        .cmd-btn:hover::before {
+            left: 0;
+        }
+
+        .cmd-btn:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .cmd-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .help-btn {
+            width: 100%;
+            background: var(--danger-color);
+            color: white;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        .help-btn::before {
+            background: var(--warning-color);
+        }
+
+        .output-section {
+            background: var(--glass-bg);
+            backdrop-filter: var(--blur-sm);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .output-header {
+            background: var(--dark-gradient);
+            color: white;
+            padding: 15px 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1em;
+        }
+
+        .output-log {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            height: 250px;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .output-log::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .output-log::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+
+        .output-log::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 4px;
+        }
+
+        .log-entry {
+            margin-bottom: 8px;
+            padding: 5px 10px;
+            border-radius: 4px;
+            border-left: 3px solid transparent;
+        }
+
+        .log-entry.success {
+            background: rgba(16, 185, 129, 0.1);
+            border-left-color: var(--success-color);
+        }
+
+        .log-entry.error {
+            background: rgba(239, 68, 68, 0.1);
+            border-left-color: var(--danger-color);
+        }
+
+        .log-entry.info {
+            background: rgba(59, 130, 246, 0.1);
+            border-left-color: var(--info-color);
+        }
+
+        .voice-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--success-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            font-size: 1.1em;
+        }
+
+        .voice-indicator.active {
+            display: flex;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 1024px) {
+            .mode-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .command-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .status-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 20px;
+            }
+            
+            .camera-container {
+                height: 400px;
+            }
+            
+            .mode-grid,
+            .command-grid,
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .system-metrics {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-     <div class="container">
-        <!-- Header -->
-        <header class="header">
-            <h1 class="title">Smart Glasses Control Panel</h1>
-            <p class="subtitle">Advanced AI-Powered Vision System</p>
-        </header>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Smart Glasses AI</h1>
+            <p>Advanced Computer Vision & Natural Language Interface</p>
+        </div>
 
-        <!-- Main Content Grid -->
-        <div class="main-grid">
-            <!-- Video Feed Section -->
+        <div class="status-bar">
+            <div class="connection-indicator" id="connection-status">
+                <span>●</span>
+                <span>Disconnected</span>
+            </div>
+            <div class="system-metrics">
+                <div class="metric">
+                    <span>⚡</span>
+                    <span id="fps-counter">0 FPS</span>
+                </div>
+                <div class="metric">
+                    <span>🎯</span>
+                    <span id="detection-count">0 objects</span>
+                </div>
+                <div class="metric">
+                    <span>⏱️</span>
+                    <span id="uptime">00:00:00</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- CENTERED CAMERA FEED SECTION -->
             <div class="video-section">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="live-indicator"></div>
-                        <h3>Live Camera Feed</h3>
-                    </div>
-                    <div class="card-content">
-                        <div class="video-container">
-                            <img id="video-feed" src="/video_feed" alt="Smart Glasses Feed" class="video-feed">
-                            <div class="video-overlay">
-                                <span id="current-mode">Mode: idle</span>
+                <h3 class="section-title">📺 Live Camera Feed</h3>
+                
+                <div class="camera-container">
+                    <div class="camera-placeholder" id="camera-placeholder">
+                        <div>
+                            <div style="font-size: 4em; margin-bottom: 20px;">📹</div>
+                            <div style="font-size: 1.5em;">Initializing camera feed...</div>
+                            <div style="font-size: 1em; opacity: 0.7; margin-top: 15px;">
+                                Please allow camera permissions
                             </div>
                         </div>
                     </div>
+                    <img class="camera-stream" id="camera-stream" style="display: none;" alt="Camera feed">
+                    <div class="camera-overlay" id="camera-info">
+                        <span id="processing-status">🔍 Standby</span>
+                    </div>
+                </div>
+
+                <div class="output-section">
+                    <div class="output-header">
+                        <span>🖥️</span>
+                        <span>System Output & Voice Commands</span>
+                        <div style="margin-left: auto; display: flex; gap: 10px;">
+                            <button onclick="clearLog()" style="background: none; border: none; color: white; cursor: pointer; font-size: 1.2em;">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="output-log" id="output-log">
+                        <div class="log-entry success">🚀 Smart Glasses AI Interface initialized</div>
+                        <div class="log-entry info">📡 Connecting to backend server...</div>
+                        <div class="log-entry info">🎤 Voice recognition system ready</div>
+                        <div class="log-entry info">📷 Camera initialization in progress...</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- System Status Section -->
-            <div class="status-section">
-                <div class="card">
-                    <div class="card-header">
-                        <h3>System Status</h3>
+            <!-- CONTROL PANEL BELOW CAMERA -->
+            <div class="control-panel">
+                <h3 class="section-title">🎛️ Smart Glasses Control Center</h3>
+
+                <div class="mode-grid">
+                    <div class="mode-card active" data-mode="detection">
+                        <div class="mode-card-content">
+                            <span class="mode-icon">🔍</span>
+                            <div class="mode-title">Object Detection</div>
+                        </div>
                     </div>
-                    <div class="card-content">
-                        <div id="status-list" class="status-list">
-                            <!-- Status items will be populated by JavaScript -->
+                    <div class="mode-card" data-mode="gps">
+                        <div class="mode-card-content">
+                            <span class="mode-icon">🗺️</span>
+                            <div class="mode-title">GPS Navigation</div>
+                        </div>
+                    </div>
+                    <div class="mode-card" data-mode="text_reading">
+                        <div class="mode-card-content">
+                            <span class="mode-icon">📖</span>
+                            <div class="mode-title">Text Reading</div>
+                        </div>
+                    </div>
+                    <div class="mode-card" data-mode="face_recognition">
+                        <div class="mode-card-content">
+                            <span class="mode-icon">👤</span>
+                            <div class="mode-title">Face Recognition</div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Quick Actions -->
-                <div class="card">
-                    <div class="card-header">
-                        <h3>Quick Actions</h3>
+                <div class="status-grid">
+                    <div class="status-card">
+                        <div class="status-value" id="current-mode">Detection</div>
+                        <div class="status-label">Active Mode</div>
                     </div>
-                    <div class="card-content">
-                        <button id="capture-btn" class="btn btn-primary">Capture Image</button>
-                        <div class="quick-commands">
-                            <button class="btn btn-secondary" data-command="start detection">Start Detection</button>
-                            <button class="btn btn-secondary" data-command="stop detection">Stop Detection</button>
-                            <button class="btn btn-secondary" data-command="read text">Read Text</button>
-                            <button class="btn btn-secondary" data-command="recognize faces">Recognize Faces</button>
-                            <button class="btn btn-secondary" data-command="navigation mode">Navigation</button>
-                            <button class="btn btn-secondary" data-command="reset system">Reset System</button>
-                        </div>
+                    <div class="status-card">
+                        <div class="status-value" id="camera-status">Offline</div>
+                        <div class="status-label">Camera Status</div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-value" id="voice-status">Inactive</div>
+                        <div class="status-label">Voice Control</div>
+                    </div>
+                    <div class="status-card">
+                        <div class="status-value" id="face-count">3</div>
+                        <div class="status-label">Known Faces</div>
                     </div>
                 </div>
+
+                <div class="command-grid">
+                    <button class="cmd-btn" data-command="what do you see">
+                        <span>👁️ What Do You See?</span>
+                    </button>
+                    <button class="cmd-btn" data-command="start detection">
+                        <span>▶️ Start Detection</span>
+                    </button>
+                    <button class="cmd-btn" data-command="stop detection">
+                        <span>⏹️ Stop Detection</span>
+                    </button>
+                    <button class="cmd-btn" data-command="where am i">
+                        <span>📍 Where Am I?</span>
+                    </button>
+                    <button class="cmd-btn" data-command="read text">
+                        <span>📝 Read Text</span>
+                    </button>
+                    <button class="cmd-btn" data-command="who is this">
+                        <span>🔍 Who Is This?</span>
+                    </button>
+                    <button class="cmd-btn" data-command="learn face as NewPerson">
+                        <span>➕ Learn New Face</span>
+                    </button>
+                    <button class="cmd-btn" data-command="list known faces">
+                        <span>👥 List Known Faces</span>
+                    </button>
+                    <button class="cmd-btn" data-command="start reading">
+                        <span>📖 Start Reading</span>
+                    </button>
+                </div>
+
+                <button class="cmd-btn help-btn" data-command="help">
+                    <span>🆘 Show All Available Commands</span>
+                </button>
             </div>
         </div>
-
-        <!-- Command Interface -->
-        <div class="command-section">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Voice Command Interface</h3>
-                </div>
-                <div class="card-content">
-                    <div class="command-input">
-                        <input type="text" id="command-input" placeholder="Enter voice command..." class="input">
-                        <button id="send-command" class="btn btn-primary">Send</button>
-                    </div>
-                    <div class="separator"></div>
-                    <div class="available-commands">
-                        <strong>Available Commands:</strong>
-                        <div class="commands-grid">
-                            <div>• start detection</div>
-                            <div>• stop detection</div>
-                            <div>• read text</div>
-                            <div>• recognize faces</div>
-                            <div>• take photo</div>
-                            <div>• navigation mode</div>
-                            <div>• reset system</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Captured Image Display -->
-            <div id="captured-image-section" class="card" style="display: none;">
-                <div class="card-header">
-                    <h3>Latest Capture</h3>
-                </div>
-                <div class="card-content">
-                    <img id="captured-image" src="" alt="Captured Image" class="captured-image">
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="footer">
-            <p>Smart Glasses System v2.0 | Real-time AI Processing</p>
-        </footer>
-
-        <!-- Toast Notifications -->
-        <div id="toast-container" class="toast-container"></div>
     </div>
-      <div class="container">
-        <header class="header">
-            <h1 class="title">System Status</h1>
-            <p class="subtitle">Real-time Smart Glasses System Information</p>
-        </header>
 
-        <div class="card">
-            <div class="card-header">
-                <h3>Current System Status</h3>
-            </div>
-            <div class="card-content">
-                <div class="status-list">
-                    {% for key, value in status.items() %}
-                    <div class="status-item">
-                        <span class="status-label">{{ key.replace('_', ' ').title() }}:</span>
-                        <span class="status-badge 
-                            {% if 'active' in value.lower() or 'working' in value.lower() or 'loaded' in value.lower() or value == 'Active' %}
-                                status-active
-                            {% elif 'inactive' in value.lower() or 'not' in value.lower() or value == 'Inactive' %}
-                                status-inactive
-                            {% else %}
-                                status-warning
-                            {% endif %}
-                        ">{{ value }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="/" class="btn btn-primary">Back to Control Panel</a>
-        </div>
-
-        <footer class="footer">
-            <p>Smart Glasses System v2.0 | Real-time AI Processing</p>
-        </footer>
+    <div class="voice-indicator" id="voice-indicator">
+        <span>🎤</span>
+        <span>Listening for commands...</span>
     </div>
-    <div class="container">
-        <header class="header">
-            <h1 class="title">Available Commands</h1>
-            <p class="subtitle">Voice and Text Commands for Smart Glasses System</p>
-        </header>
 
-        <div class="main-grid">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Detection Commands</h3>
-                </div>
-                <div class="card-content">
-                    <div class="commands-list">
-                        <div class="command-item">
-                            <strong>start detection</strong> - Begin object detection mode
-                        </div>
-                        <div class="command-item">
-                            <strong>stop detection</strong> - End object detection mode
-                        </div>
-                        <div class="command-item">
-                            <strong>increase confidence</strong> - Raise detection threshold
-                        </div>
-                        <div class="command-item">
-                            <strong>decrease confidence</strong> - Lower detection threshold
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3>Text & Recognition Commands</h3>
-                </div>
-                <div class="card-content">
-                    <div class="commands-list">
-                        <div class="command-item">
-                            <strong>read text</strong> - Activate text reading mode
-                        </div>
-                        <div class="command-item">
-                            <strong>recognize faces</strong> - Start face recognition
-                        </div>
-                        <div class="command-item">
-                            <strong>learn face</strong> - Add new face to database
-                        </div>
-                        <div class="command-item">
-                            <strong>take photo</strong> - Capture current frame
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3>Navigation Commands</h3>
-                </div>
-                <div class="card-content">
-                    <div class="commands-list">
-                        <div class="command-item">
-                            <strong>navigation mode</strong> - Enable navigation assistance
-                        </div>
-                        <div class="command-item">
-                            <strong>stop navigation</strong> - Disable navigation
-                        </div>
-                        <div class="command-item">
-                            <strong>describe scene</strong> - Get scene description
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h3>System Commands</h3>
-                </div>
-                <div class="card-content">
-                    <div class="commands-list">
-                        <div class="command-item">
-                            <strong>reset system</strong> - Reset all modes to default
-                        </div>
-                        <div class="command-item">
-                            <strong>status</strong> - Get system status
-                        </div>
-                        <div class="command-item">
-                            <strong>help</strong> - Show available commands
-                        </div>
-                        <div class="command-item">
-                            <strong>shutdown</strong> - Safely shutdown system
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div style="text-align: center; margin-top: 20px;">
-            <a href="/" class="btn btn-primary">Back to Control Panel</a>
-        </div>
-
-        <footer class="footer">
-            <p>Smart Glasses System v2.0 | Real-time AI Processing</p>
-        </footer>
-    </div>
-<script> 
-    class SmartGlassesUI {
-    constructor() {
-        this.isLoading = false;
-        this.init();
-    }
-
-    init() {
-        this.setupEventListeners();
-        this.startStatusUpdates();
-        this.refreshVideoFeed();
-    }
-
-    setupEventListeners() {
-        // Command input
-        const commandInput = document.getElementById('command-input');
-        const sendButton = document.getElementById('send-command');
-        
-        sendButton.addEventListener('click', () => this.sendCommand());
-        commandInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') this.sendCommand();
-        });
-
-        // Quick command buttons
-        document.querySelectorAll('[data-command]').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const command = e.target.getAttribute('data-command');
-                document.getElementById('command-input').value = command;
-                this.sendCommand();
-            });
-        });
-
-        // Capture image button
-        document.getElementById('capture-btn').addEventListener('click', () => {
-            this.captureImage();
-        });
-    }
-
-    async sendCommand() {
-        const commandInput = document.getElementById('command-input');
-        const command = commandInput.value.trim();
-        
-        if (!command) return;
-
-        this.setLoading(true);
-        
-        try {
-            const response = await fetch('/command', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ command }),
-            });
-            
-            const data = await response.json();
-            
-            if (data.status === 'success') {
-                this.showToast('Command Sent', data.message, 'success');
-                commandInput.value = '';
-            } else {
-                this.showToast('Error', data.message, 'error');
-            }
-        } catch (error) {
-            this.showToast('Error', 'Failed to send command', 'error');
-            console.error('Command error:', error);
-        } finally {
-            this.setLoading(false);
-        }
-    }
-
-    async captureImage() {
-        this.setLoading(true);
-        
-        try {
-            const response = await fetch('/capture_image', {
-                method: 'POST',
-            });
-            
-            const data = await response.json();
-            
-            if (data.status === 'success') {
-                const imageSection = document.getElementById('captured-image-section');
-                const imageElement = document.getElementById('captured-image');
+    <script>
+        class AdvancedSmartGlassesInterface {
+            constructor() {
+                this.currentMode = 'detection';
+                this.isConnected = false;
+                this.baseUrl = window.location.origin;
+                this.startTime = Date.now();
+                this.fpsCounter = 0;
+                this.detectionCount = 0;
                 
-                imageElement.src = `data:image/jpeg;base64,${data.image}`;
-                imageSection.style.display = 'block';
-                
-                this.showToast('Image Captured', 'Successfully captured image from camera', 'success');
-            } else {
-                this.showToast('Error', data.message, 'error');
+                this.init();
             }
-        } catch (error) {
-            this.showToast('Error', 'Failed to capture image', 'error');
-            console.error('Capture error:', error);
-        } finally {
-            this.setLoading(false);
-        }
-    }
 
-    async fetchStatus() {
-        try {
-            const response = await fetch('/status');
-            if (response.ok) {
-                // Check if response is JSON
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    const data = await response.json();
-                    this.updateStatus(data);
-                } else {
-                    // If it's HTML (like the current Flask route), we need to handle it differently
-                    console.log('Status endpoint returned HTML, need JSON endpoint');
+            init() {
+                this.setupEventListeners();
+                this.checkConnection();
+                this.startCameraFeed();
+                this.startStatusUpdates();
+                this.startUptimeCounter();
+                
+                this.addLog('🚀 Advanced Smart Glasses interface initialized', 'success');
+            }
+
+            setupEventListeners() {
+                // Mode cards
+                document.querySelectorAll('.mode-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        const mode = card.dataset.mode;
+                        this.switchMode(mode);
+                    });
+                });
+
+                // Command buttons
+                document.querySelectorAll('.cmd-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const command = btn.dataset.command;
+                        this.sendCommand(command);
+                    });
+                });
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey) {
+                        switch(e.key) {
+                            case '1': this.switchMode('detection'); break;
+                            case '2': this.switchMode('gps'); break;
+                            case '3': this.switchMode('text_reading'); break;
+                            case '4': this.switchMode('face_recognition'); break;
+                        }
+                    }
+                });
+            }
+
+            async checkConnection() {
+                try {
+                    const response = await fetch(`${this.baseUrl}/status`);
+                    if (response.ok) {
+                        this.isConnected = true;
+                        this.updateConnectionStatus(true);
+                        this.addLog('✅ Successfully connected to Smart Glasses backend', 'success');
+                    } else {
+                        throw new Error('Backend not responding');
+                    }
+                } catch (error) {
+                    this.isConnected = false;
+                    this.updateConnectionStatus(false);
+                    this.addLog('❌ Backend connection failed: ' + error.message, 'error');
+                    
+                    // Retry connection after 5 seconds
+                    setTimeout(() => this.checkConnection(), 5000);
                 }
             }
-        } catch (error) {
-            console.error('Failed to fetch status:', error);
-        }
-    }
 
-    updateStatus(status) {
-        // Update current mode in video overlay
-        document.getElementById('current-mode').textContent = `Mode: ${status.current_mode}`;
-        
-        // Update status list
-        const statusList = document.getElementById('status-list');
-        statusList.innerHTML = '';
-        
-        Object.entries(status).forEach(([key, value]) => {
-            const statusItem = document.createElement('div');
-            statusItem.className = 'status-item';
-            
-            const label = document.createElement('span');
-            label.className = 'status-label';
-            label.textContent = key.replace('_', ' ') + ':';
-            
-            const badge = document.createElement('span');
-            badge.className = `status-badge ${this.getStatusClass(value.toString())}`;
-            badge.textContent = value.toString();
-            
-            statusItem.appendChild(label);
-            statusItem.appendChild(badge);
-            statusList.appendChild(statusItem);
+            switchMode(mode) {
+                if (mode === this.currentMode) return;
+                
+                this.currentMode = mode;
+                
+                // Update UI
+                document.querySelectorAll('.mode-card').forEach(card => {
+                    card.classList.remove('active');
+                });
+                document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+                
+                // Send command
+                this.sendCommand(`switch to ${mode}`);
+                this.addLog(`🔄 Switched to ${mode.replace('_', ' ')} mode`, 'info');
+            }
+
+            async sendCommand(command) {
+                if (!this.isConnected) {
+                    this.addLog('❌ Cannot send command - not connected to backend', 'error');
+                    return;
+                }
+
+                this.addLog(`🎯 Executing: ${command}`, 'info');
+
+                try {
+                    const response = await fetch(`${this.baseUrl}/command`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            command: command,
+                            timestamp: Date.now()
+                        })
+                    });
+
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        this.addLog(`✅ ${data.result}`, 'success');
+                        
+                        // Show voice indicator for speech commands
+                        if (command.includes('what do you see') || command.includes('who is this') || command.includes('where am i')) {
+                            this.showVoiceIndicator();
+                        }
+                    } else {
+                        this.addLog(`❌ Command failed: ${data.error}`, 'error');
+                    }
+                } catch (error) {
+                    this.addLog(`❌ Request failed: ${error.message}`, 'error');
+                }
+            }
+
+            startCameraFeed() {
+                let frameCount = 0;
+                let lastFpsTime = Date.now();
+
+                const updateFeed = async () => {
+                    if (!this.isConnected) {
+                        setTimeout(updateFeed, 1000);
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(`${this.baseUrl}/camera_feed`);
+                        const data = await response.json();
+                        
+                        if (data.success && data.frame) {
+                            const stream = document.getElementById('camera-stream');
+                            const placeholder = document.getElementById('camera-placeholder');
+                            
+                            stream.src = data.frame;
+                            stream.style.display = 'block';
+                            placeholder.style.display = 'none';
+                            
+                            // Update FPS counter
+                            frameCount++;
+                            const now = Date.now();
+                            if (now - lastFpsTime >= 1000) {
+                                this.fpsCounter = frameCount;
+                                document.getElementById('fps-counter').textContent = `${frameCount} FPS`;
+                                frameCount = 0;
+                                lastFpsTime = now;
+                            }
+                            
+                            // Update processing status based on mode
+                            const statusText = this.currentMode.charAt(0).toUpperCase() + 
+                                               this.currentMode.slice(1).replace('_', ' ');
+                            document.getElementById('processing-status').textContent = `🔍 ${statusText}`;
+                        }
+                    } catch (error) {
+                        // Silent fail for camera feed
+                    }
+                    
+                    setTimeout(updateFeed, 100); // 10 FPS
+                };
+
+                updateFeed();
+            }
+
+            startStatusUpdates() {
+                const updateStatus = async () => {
+                    if (!this.isConnected) {
+                        setTimeout(updateStatus, 2000);
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch(`${this.baseUrl}/status`);
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            this.updateSystemStatus(data);
+                        }
+                    } catch (error) {
+                        // Silent fail for status updates
+                    }
+                    
+                    setTimeout(updateStatus, 2000);
+                };
+
+                updateStatus();
+            }
+
+            startUptimeCounter() {
+                setInterval(() => {
+                    const uptime = Date.now() - this.startTime;
+                    const hours = Math.floor(uptime / 3600000).toString().padStart(2, '0');
+                    const minutes = Math.floor((uptime % 3600000) / 60000).toString().padStart(2, '0');
+                    const seconds = Math.floor((uptime % 60000) / 1000).toString().padStart(2, '0');
+                    
+                    document.getElementById('uptime').textContent = `${hours}:${minutes}:${seconds}`;
+                }, 1000);
+            }
+
+            updateSystemStatus(data) {
+                if (data.current_mode) {
+                    document.getElementById('current-mode').textContent = 
+                        data.current_mode.charAt(0).toUpperCase() + data.current_mode.slice(1).replace('_', ' ');
+                }
+                if (data.camera_status) {
+                    document.getElementById('camera-status').textContent = data.camera_status;
+                }
+                if (data.voice_active !== undefined) {
+                    document.getElementById('voice-status').textContent = 
+                        data.voice_active ? 'Active' : 'Inactive';
+                }
+                if (data.face_count !== undefined) {
+                    document.getElementById('face-count').textContent = data.face_count;
+                }
+            }
+
+            updateConnectionStatus(connected) {
+                const indicator = document.getElementById('connection-status');
+                indicator.className = `connection-indicator ${connected ? 'connected' : 'disconnected'}`;
+                indicator.innerHTML = `
+                    <span>●</span>
+                    <span>${connected ? 'Connected' : 'Disconnected'}</span>
+                `;
+            }
+
+            showVoiceIndicator() {
+                const indicator = document.getElementById('voice-indicator');
+                indicator.classList.add('active');
+                setTimeout(() => {
+                    indicator.classList.remove('active');
+                }, 4000);
+            }
+
+            addLog(message, type = 'info') {
+                const log = document.getElementById('output-log');
+                const entry = document.createElement('div');
+                entry.className = `log-entry ${type}`;
+                
+                const timestamp = new Date().toLocaleTimeString();
+                entry.innerHTML = `<span style="opacity: 0.7; font-size: 0.8em;">[${timestamp}]</span> ${message}`;
+                
+                log.appendChild(entry);
+                log.scrollTop = log.scrollHeight;
+
+                // Keep only last 50 entries
+                if (log.children.length > 50) {
+                    log.removeChild(log.firstChild);
+                }
+            }
+        }
+
+        // Global functions
+        function clearLog() {
+            const log = document.getElementById('output-log');
+            log.innerHTML = '<div class="log-entry info">📝 Log cleared by user</div>';
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            window.smartGlassesInterface = new AdvancedSmartGlassesInterface();
         });
-    }
-
-    getStatusClass(value) {
-        if (value.includes('active') || value.includes('working') || value.includes('loaded') || value === 'Active') {
-            return 'status-active';
-        }
-        if (value.includes('inactive') || value.includes('not') || value === 'Inactive') {
-            return 'status-inactive';
-        }
-        return 'status-warning';
-    }
-
-    refreshVideoFeed() {
-        const videoFeed = document.getElementById('video-feed');
-        
-        // Refresh video feed periodically
-        setInterval(() => {
-            if (videoFeed) {
-                videoFeed.src = `/video_feed?${Date.now()}`;
-            }
-        }, 100);
-    }
-
-    startStatusUpdates() {
-        // Fetch status immediately
-        this.fetchStatus();
-        
-        // Then fetch every 2 seconds
-        setInterval(() => {
-            this.fetchStatus();
-        }, 2000);
-    }
-
-    setLoading(loading) {
-        this.isLoading = loading;
-        const sendButton = document.getElementById('send-command');
-        const captureButton = document.getElementById('capture-btn');
-        
-        if (loading) {
-            sendButton.textContent = 'Processing...';
-            sendButton.disabled = true;
-            captureButton.disabled = true;
-        } else {
-            sendButton.textContent = 'Send';
-            sendButton.disabled = false;
-            captureButton.disabled = false;
-        }
-    }
-
-    showToast(title, message, type = 'success') {
-        const toastContainer = document.getElementById('toast-container');
-        
-        const toast = document.createElement('div');
-        toast.className = `toast toast-${type}`;
-        
-        toast.innerHTML = `
-            <div class="toast-title">${title}</div>
-            <div class="toast-description">${message}</div>
-        `;
-        
-        toastContainer.appendChild(toast);
-        
-        // Remove toast after 5 seconds
-        setTimeout(() => {
-            if (toast.parentNode) {
-                toast.parentNode.removeChild(toast);
-            }
-        }, 5000);
-    }
-}
-document.addEventListener('DOMContentLoaded', () => {
-    new SmartGlassesUI();
-});
-        // Auto-refresh status every 3 seconds
-        setTimeout(() => {
-            window.location.reload();
-        }, 3000);
-    
-</script>
+    </script>
 </body>
 </html>
