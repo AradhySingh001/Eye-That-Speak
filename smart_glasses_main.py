@@ -22,19 +22,19 @@ from datetime import datetime
 
 class IntegratedSmartGlasses:
     def __init__(self):
-        print("🔧 Initializing Integrated Smart Glasses System...")
+        print(" Initializing Integrated Smart Glasses System...")
         
         # Load YOLOv8 model for object detection
-        print("📱 Loading YOLOv8 model...")
+        print(" Loading YOLOv8 model...")
         try:
             self.model = YOLO("yolov8n.pt")
-            print("✅ YOLOv8 model loaded successfully!")
+            print(" YOLOv8 model loaded successfully!")
         except Exception as e:
-            print(f"❌ Error loading YOLO model: {e}")
+            print(f" Error loading YOLO model: {e}")
             self.model = None
         
         # Initialize text-to-speech
-        print("🔊 Initializing TTS...")
+        print(" Initializing TTS...")
         try:
             self.tts = pyttsx3.init()
             self.tts.setProperty('rate', 150)
@@ -47,13 +47,13 @@ class IntegratedSmartGlasses:
                     if any(keyword in voice.name.lower() for keyword in ['female', 'zira', 'hazel']):
                         self.tts.setProperty('voice', voice.id)
                         break
-            print("✅ TTS initialized successfully!")
+            print(" TTS initialized successfully!")
         except Exception as e:
-            print(f"❌ TTS initialization error: {e}")
+            print(f" TTS initialization error: {e}")
             self.tts = None
         
         # Initialize speech recognition
-        print("🎤 Setting up speech recognition...")
+        print(" Setting up speech recognition...")
         try:
             self.recognizer = sr.Recognizer()
             self.microphone = sr.Microphone()
@@ -63,9 +63,9 @@ class IntegratedSmartGlasses:
             with self.microphone as source:
                 self.recognizer.adjust_for_ambient_noise(source, duration=2)
                 self.recognizer.energy_threshold = 4000
-            print("✅ Speech recognition ready!")
+            print(" Speech recognition ready!")
         except Exception as e:
-            print(f"❌ Microphone setup error: {e}")
+            print(f" Microphone setup error: {e}")
             self.microphone = None
         
         # System state
@@ -91,7 +91,7 @@ class IntegratedSmartGlasses:
         self.reading_language = 'eng'  # Default OCR language
         
         # Facial recognition functionality
-        print("👤 Initializing facial recognition...")
+        print(" Initializing facial recognition...")
         self.face_recognition_active = False
         self.known_faces = {}  # Dictionary to store known face encodings
         self.face_database_file = "face_database.pkl"
@@ -100,13 +100,13 @@ class IntegratedSmartGlasses:
         self.last_recognition_time = 0
         self.recognition_interval = 2.0
         self.load_face_database()
-        print("✅ Facial recognition initialized!")
+        print(" Facial recognition initialized!")
         
         # Camera setup
         self.cap = None
         self.camera_initialized = False
         
-        print("✅ Integrated Smart Glasses initialized!")
+        print(" Integrated Smart Glasses initialized!")
         self.show_all_commands()
     
     def load_face_database(self):
@@ -122,11 +122,11 @@ class IntegratedSmartGlasses:
                 for name, encoding in zip(face_names, face_encodings):
                     self.known_faces[name] = encoding
                 
-                print(f"📚 Loaded {len(self.known_faces)} known faces from database")
+                print(f" Loaded {len(self.known_faces)} known faces from database")
             else:
-                print("📚 No existing face database found. Starting fresh.")
+                print(" No existing face database found. Starting fresh.")
         except Exception as e:
-            print(f"❌ Error loading face database: {e}")
+            print(f" Error loading face database: {e}")
             self.known_faces = {}
     
     def save_face_database(self):
@@ -140,16 +140,16 @@ class IntegratedSmartGlasses:
             with open(self.face_names_file, 'w') as f:
                 json.dump(face_names, f)
             
-            print(f"💾 Saved {len(self.known_faces)} faces to database")
+            print(f" Saved {len(self.known_faces)} faces to database")
         except Exception as e:
-            print(f"❌ Error saving face database: {e}")
+            print(f" Error saving face database: {e}")
     
     def initialize_camera(self):
         """Initialize camera with fallback options"""
         if self.camera_initialized and self.cap and self.cap.isOpened():
             return True
             
-        print("📷 Initializing camera...")
+        print(" Initializing camera...")
         
         # Try different camera indices
         for idx in [0, 1, -1, 2]:
@@ -160,7 +160,7 @@ class IntegratedSmartGlasses:
                 if self.cap.isOpened():
                     ret, frame = self.cap.read()
                     if ret and frame is not None:
-                        print(f"✅ Camera initialized with index {idx}")
+                        print(f" Camera initialized with index {idx}")
                         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.frame_width)
                         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.frame_height)
                         self.camera_initialized = True
@@ -173,37 +173,37 @@ class IntegratedSmartGlasses:
                 if self.cap:
                     self.cap.release()
                     
-        print("❌ Could not initialize camera")
+        print(" Could not initialize camera")
         self.camera_initialized = False
         return False
     
     def show_all_commands(self):
         """Display all available voice commands"""
-        print("\n🎤 INTEGRATED SMART GLASSES COMMANDS:")
+        print("\n INTEGRATED SMART GLASSES COMMANDS:")
         print("=" * 60)
         
-        print("🔄 MODE SWITCHING:")
+        print(" MODE SWITCHING:")
         print("• 'switch to detection' - Object detection mode")
         print("• 'switch to gps' - GPS navigation mode")
         print("• 'switch to text reading' - Text reading mode")
         print("• 'switch to face recognition' - Facial recognition mode")
         print("• 'what mode' - Current mode status")
         
-        print("\n🔍 OBJECT DETECTION COMMANDS:")
+        print("\n OBJECT DETECTION COMMANDS:")
         print("• 'start detection' - Begin continuous detection")
         print("• 'stop detection' - Pause detection")
         print("• 'what do you see' - Describe current view")
         print("• 'find [object]' - Look for specific object")
         print("• 'count [objects]' - Count specific objects")
         
-        print("\n🗺️ GPS NAVIGATION COMMANDS:")
+        print("\n GPS NAVIGATION COMMANDS:")
         print("• 'where am i' - Get current location")
         print("• 'navigate to [place]' - Start navigation")
         print("• 'save location as [name]' - Save current location")
         print("• 'distance to [place]' - Get distance")
         print("• 'stop navigation' - End navigation")
         
-        print("\n📖 TEXT READING COMMANDS:")
+        print("\n TEXT READING COMMANDS:")
         print("• 'read text' - Read text from camera view")
         print("• 'start reading' - Start continuous text reading")
         print("• 'stop reading' - Stop text reading")
@@ -212,7 +212,7 @@ class IntegratedSmartGlasses:
         print("• 'read fast' - Read text at fast speed")
         print("• 'change language to [lang]' - Change OCR language")
         
-        print("\n👤 FACIAL RECOGNITION COMMANDS:")
+        print("\n FACIAL RECOGNITION COMMANDS:")
         print("• 'who is this' - Identify person in view")
         print("• 'start face recognition' - Begin continuous face recognition")
         print("• 'stop face recognition' - Stop face recognition")
@@ -221,7 +221,7 @@ class IntegratedSmartGlasses:
         print("• 'list known faces' - Show all known people")
         print("• 'face database status' - Show database information")
         
-        print("\n⚙️ SYSTEM COMMANDS:")
+        print("\n SYSTEM COMMANDS:")
         print("• 'help' - Show all commands")
         print("• 'system status' - Show system status")
         print("• 'test camera' - Test camera")
@@ -236,7 +236,7 @@ class IntegratedSmartGlasses:
         self.listening = True
         self.speech_thread = threading.Thread(target=self._unified_speech_loop, daemon=True)
         self.speech_thread.start()
-        print("🎤 Unified voice control started!")
+        print(" Unified voice control started!")
     
     def stop_voice_control(self):
         """Stop voice control system"""
@@ -253,7 +253,7 @@ class IntegratedSmartGlasses:
                     audio = self.recognizer.listen(source, timeout=1.0, phrase_time_limit=3.0)
                 
                 command = self.recognizer.recognize_google(audio).lower()
-                print(f"🎤 Command: '{command}'")
+                print(f" Command: '{command}'")
                 
                 result = self.process_unified_command(command)
                 if result == "exit":
@@ -269,6 +269,7 @@ class IntegratedSmartGlasses:
             except Exception as e:
                 print(f"Speech loop error: {e}")
                 time.sleep(1)
+    
     
     def process_unified_command(self, command):
         """Process unified voice commands with improved handling"""
@@ -336,7 +337,7 @@ class IntegratedSmartGlasses:
                 return None
             
         except Exception as e:
-            print(f"❌ Command processing error: {e}")
+            print(f" Command processing error: {e}")
             self.speak("Error processing command")
             return None
     
@@ -388,7 +389,7 @@ class IntegratedSmartGlasses:
                 return None
                 
         except Exception as e:
-            print(f"❌ Face recognition command error: {e}")
+            print(f" Face recognition command error: {e}")
             self.speak("Error in face recognition command")
             return None
     
@@ -443,7 +444,7 @@ class IntegratedSmartGlasses:
             print(f"👤 Identified: {identified_people}")
             
         except Exception as e:
-            print(f"❌ Person identification error: {e}")
+            print(f" Person identification error: {e}")
             self.speak("Error identifying person")
     
     def learn_new_face(self, name):
@@ -481,12 +482,12 @@ class IntegratedSmartGlasses:
                 self.save_face_database()
                 
                 self.speak(f"Successfully learned {name}'s face")
-                print(f"✅ Learned new face: {name}")
+                print(f" Learned new face: {name}")
             else:
                 self.speak("Could not encode the face. Please try again.")
                 
         except Exception as e:
-            print(f"❌ Face learning error: {e}")
+            print(f" Face learning error: {e}")
             self.speak("Error learning face")
     
     def forget_person(self, name):
@@ -496,12 +497,12 @@ class IntegratedSmartGlasses:
                 del self.known_faces[name]
                 self.save_face_database()
                 self.speak(f"Forgotten {name}")
-                print(f"🗑️ Removed {name} from database")
+                print(f" Removed {name} from database")
             else:
                 self.speak(f"I don't know anyone named {name}")
                 
         except Exception as e:
-            print(f"❌ Error forgetting person: {e}")
+            print(f" Error forgetting person: {e}")
             self.speak("Error removing person from database")
     
     def list_known_faces(self):
@@ -530,7 +531,7 @@ class IntegratedSmartGlasses:
             status_text += f". Recognition threshold is {self.recognition_threshold:.1f}"
         
         self.speak(status_text)
-        print(f"📊 {status_text}")
+        print(f" {status_text}")
     
     def process_continuous_face_recognition(self, frame):
         """Process continuous face recognition"""
@@ -579,7 +580,7 @@ class IntegratedSmartGlasses:
                 self.last_recognition_time = current_time
             
         except Exception as e:
-            print(f"❌ Continuous face recognition error: {e}")
+            print(f" Continuous face recognition error: {e}")
         
         return frame
     
@@ -647,7 +648,7 @@ class IntegratedSmartGlasses:
                 return None
                 
         except Exception as e:
-            print(f"❌ Text reading command error: {e}")
+            print(f" Text reading command error: {e}")
             self.speak("Error in text reading command")
             return None
     
@@ -683,15 +684,15 @@ class IntegratedSmartGlasses:
                     self.speak("Found long text. Reading first part.")
                     cleaned_text = cleaned_text[:500] + "... text continues"
                 
-                print(f"📖 Extracted text: {extracted_text}")
+                print(f" Extracted text: {extracted_text}")
                 self.speak(cleaned_text)
                 
             else:
                 self.speak("No readable text found in the current view")
-                print("📖 No text detected")
+                print(" No text detected")
                 
         except Exception as e:
-            print(f"❌ Text reading error: {e}")
+            print(f" Text reading error: {e}")
             self.speak("Error reading text. Please ensure text is clear and well-lit.")
     
     def preprocess_for_ocr(self, image):
@@ -785,7 +786,7 @@ class IntegratedSmartGlasses:
                 return None
                 
         except Exception as e:
-            print(f"❌ Detection command error: {e}")
+            print(f" Detection command error: {e}")
             self.speak("Error in detection command")
             return None
     
@@ -824,7 +825,7 @@ class IntegratedSmartGlasses:
                 return None
                 
         except Exception as e:
-            print(f"❌ GPS command error: {e}")
+            print(f" GPS command error: {e}")
             self.speak("Error in GPS command")
             return None
     
@@ -839,10 +840,10 @@ class IntegratedSmartGlasses:
             if ret and frame is not None:
                 return frame
             else:
-                print("❌ Failed to capture frame")
+                print(" Failed to capture frame")
                 return None
         except Exception as e:
-            print(f"❌ Frame capture error: {e}")
+            print(f" Frame capture error: {e}")
             return None
     
     def describe_current_view(self):
@@ -886,10 +887,10 @@ class IntegratedSmartGlasses:
                 description += ", ".join(items[:-1]) + f", and {items[-1]}"
             
             self.speak(description)
-            print(f"🔍 Detection results: {description}")
+            print(f" Detection results: {description}")
             
         except Exception as e:
-            print(f"❌ Description error: {e}")
+            print(f" Description error: {e}")
             self.speak("Error analyzing view")
     
     def find_specific_object(self, target_object):
@@ -920,13 +921,13 @@ class IntegratedSmartGlasses:
                     self.speak(f"I found a {target_object} at {position}")
                 else:
                     self.speak(f"I found {count} {target_object}s")
-                print(f"✅ Found {count} {target_object}(s)")
+                print(f" Found {count} {target_object}(s)")
             else:
                 self.speak(f"I don't see any {target_object}")
-                print(f"❌ No {target_object} found")
+                print(f" No {target_object} found")
                 
         except Exception as e:
-            print(f"❌ Find object error: {e}")
+            print(f" Find object error: {e}")
             self.speak("Error finding object")
     
     def count_specific_objects(self, target_object):
@@ -957,10 +958,10 @@ class IntegratedSmartGlasses:
             else:
                 self.speak(f"I see {count} {target_object}s")
             
-            print(f"📊 Count result: {count} {target_object}(s)")
+            print(f" Count result: {count} {target_object}(s)")
             
         except Exception as e:
-            print(f"❌ Count error: {e}")
+            print(f" Count error: {e}")
             self.speak("Error counting objects")
     
     def test_camera(self):
@@ -997,7 +998,7 @@ class IntegratedSmartGlasses:
         
         status_text = "System status: " + ", ".join(status_parts)
         self.speak(status_text)
-        print(f"ℹ️ {status_text}")
+        print(f" {status_text}")
     
     # Object Detection Methods
     def process_detections(self, results):
@@ -1094,40 +1095,40 @@ class IntegratedSmartGlasses:
                 
                 location_text = f"You are in {data['city']}, {data['regionName']}, {data['country']}"
                 self.speak(location_text)
-                print(f"📍 Location: {location_text}")
+                print(f" Location: {location_text}")
             else:
                 self.speak("Unable to determine your location")
                 
         except Exception as e:
-            print(f"❌ Location error: {e}")
+            print(f" Location error: {e}")
             self.speak("Error getting location. Please check your internet connection.")
     
     def start_navigation(self, destination):
         """Start navigation"""
         self.speak(f"Starting navigation to {destination}")
         self.is_navigating = True
-        print(f"🧭 Navigation started to: {destination}")
+        print(f" Navigation started to: {destination}")
         # In a real implementation, this would start turn-by-turn navigation
     
     def stop_navigation(self):
         """Stop navigation"""
         self.is_navigating = False
         self.speak("Navigation stopped")
-        print("🛑 Navigation stopped")
+        print(" Navigation stopped")
     
     def save_current_location(self, name):
         """Save current location"""
         if self.current_location:
             self.saved_locations[name] = self.current_location.copy()
             self.speak(f"Location saved as {name}")
-            print(f"💾 Location saved as: {name}")
+            print(f" Location saved as: {name}")
         else:
             self.speak("Current location not available. Please get location first.")
     
     def get_distance_to(self, destination):
         """Get distance to destination"""
         self.speak(f"Calculating distance to {destination}")
-        print(f"📏 Distance calculation to: {destination}")
+        print(f" Distance calculation to: {destination}")
         # In a real implementation, this would calculate actual distance
         self.speak("Distance calculation feature coming soon")
     
@@ -1137,19 +1138,19 @@ class IntegratedSmartGlasses:
             lat = self.current_location['lat']
             lon = self.current_location['lon']
             self.speak(f"Your coordinates are {lat:.4f} latitude, {lon:.4f} longitude")
-            print(f"🌐 Coordinates: {lat:.4f}, {lon:.4f}")
+            print(f" Coordinates: {lat:.4f}, {lon:.4f}")
         else:
             self.speak("Location not available. Please get your location first.")
     
     def speak(self, message):
         """Text-to-speech output with error handling"""
         try:
-            print(f"🔊 {message}")
+            print(f" {message}")
             if self.tts:
                 self.tts.say(message)
                 self.tts.runAndWait()
         except Exception as e:
-            print(f"❌ Speech error: {e}")
+            print(f" Speech error: {e}")
     
     def add_system_overlay(self, frame):
         """Add system information overlay to frame"""
@@ -1197,7 +1198,7 @@ class IntegratedSmartGlasses:
                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (255, 255, 255), 1)
         
         # Voice control indicator
-        voice_status = "🎤 LISTENING" if self.listening else "🎤 OFF"
+        voice_status = " LISTENING" if self.listening else "🎤 OFF"
         cv2.putText(frame, voice_status, (frame.shape[1] - 150, 30), 
                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
     
@@ -1212,7 +1213,7 @@ class IntegratedSmartGlasses:
             self.start_voice_control()
             
             if not self.camera_initialized:
-                print("⚠️ Camera not available - running in audio-only mode")
+                print(" Camera not available - running in audio-only mode")
                 self.speak("Camera not available. Running in voice-only mode. Say help for commands.")
                 
                 # Keep system running for voice commands only
@@ -1228,7 +1229,7 @@ class IntegratedSmartGlasses:
             while True:
                 ret, frame = self.cap.read()
                 if not ret:
-                    print("❌ Failed to read from camera")
+                    print(" Failed to read from camera")
                     break
                 
                 current_time = time.time()
@@ -1252,7 +1253,7 @@ class IntegratedSmartGlasses:
                             if detected_objects:
                                 self.speak_detections(detected_objects)
                         except Exception as e:
-                            print(f"❌ Detection error: {e}")
+                            print(f" Detection error: {e}")
                 
                 # Text reading processing (only in text_reading mode)
                 elif self.current_mode == "text_reading" and self.text_reading_active:
@@ -1261,7 +1262,7 @@ class IntegratedSmartGlasses:
                             self.read_text_from_camera()
                             last_reading_time = current_time
                         except Exception as e:
-                            print(f"❌ Text reading error: {e}")
+                            print(f" Text reading error: {e}")
                 
                 # Face recognition processing (only in face_recognition mode)
                 elif self.current_mode == "face_recognition":
@@ -1299,7 +1300,7 @@ class IntegratedSmartGlasses:
                     self.identify_person()
         
         except KeyboardInterrupt:
-            print("\n⚠️ Interrupted by user")
+            print("\n Interrupted by user")
         finally:
             self.shutdown()
     
@@ -1338,12 +1339,13 @@ class IntegratedSmartGlasses:
             self.cap.release()
         
         cv2.destroyAllWindows()
-        print("✅ System shutdown complete")
+        print(" System shutdown complete")
+        
 
 # Main execution
 if __name__ == "__main__":
     try:
-        print("🚀 Welcome to Smart Glasses with Facial Recognition!")
+        print(" Welcome to Smart Glasses with Facial Recognition!")
         print("Make sure you have all required packages installed:")
         print("- Tesseract OCR for text reading")
         print("- dlib and face_recognition for facial recognition")
@@ -1357,14 +1359,14 @@ if __name__ == "__main__":
         smart_glasses.run_integrated_system()
         
     except KeyboardInterrupt:
-        print("\n⚠️ Shutting down Smart Glasses...")
+        print("\n Shutting down Smart Glasses...")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f" Error: {e}")
         import traceback
         traceback.print_exc()
-        print("\n📦 Make sure you have all required packages installed:")
+        print("\n Make sure you have all required packages installed:")
         print("pip install ultralytics opencv-python pyttsx3 speechrecognition pyaudio requests pytesseract pillow face_recognition")
-        print("\n🔧 Also install system dependencies:")
+        print("\n Also install system dependencies:")
         print("- Tesseract OCR for text reading")
         print("- dlib for facial recognition (may require cmake and visual studio build tools on Windows)")
     finally:
