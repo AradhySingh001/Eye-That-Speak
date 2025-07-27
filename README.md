@@ -1,4 +1,6 @@
-Smart Glasses with Facial Recognition
+#Smart Glasses 
+
+
 A comprehensive AI-powered smart glasses system that combines object detection, GPS navigation, text reading, and facial recognition with unified voice control.
 
 
@@ -222,7 +224,7 @@ f - Instant face recognition
 ____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 
-SMART GLASSES WITH FACIAL RECOGNITION - SETUP GUIDE
+#SMART GLASSES WITH FACIAL RECOGNITION - SETUP GUIDE
 ==================================================
 
 STEP 1: SYSTEM REQUIREMENTS CHECK
@@ -509,7 +511,7 @@ NEXT STEPS
 ____________________________________________________________________________________________________________________________________________________________________________________________________________________
 
 
-Main Setup Steps:
+#Main Setup Steps:
 
 System Requirements Check
 Install System Dependencies (Windows/Ubuntu/macOS specific)
