@@ -1,19 +1,24 @@
-smart_glasses/
+project-root/
 ├── __pycache__/
 ├── .dist/
+├── data/
+├── logs/
+├── models/
 ├── smart_glasses_env/
-├── templates/
-│   ├── index.html
-│   
+├── vosk-model-small-en-us-0.15/
+│
 ├── app.py
 ├── cmake-installer.exe
 ├── face_database.pkl
 ├── face_names.json
-├── nul
+├── index.html
+├── nul                           <-- (possibly an accidental/placeholder file)
 ├── requirements.txt
-├── smart_glasses_location.py
-├── smart_glasses_main.py
+├── smart_glasses_locations.db
+├── smart_glasses.log
+├── smart_glasses.py
 ├── tesseract-installer.exe
 ├── tesseract-ocr.exe
-├── vosk-model-small-en-us-0.15/
-└── yolov8n.pt
+├── vosk-model-small-en-us-0.15.zip
+├── yolov8n.pt
+
