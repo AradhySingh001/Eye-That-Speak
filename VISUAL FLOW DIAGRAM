@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart Glasses System Architecture - Enhanced Dark Theme</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #0a0a0a;
+        color: #ffffff;
+        overflow-x: auto;
+        cursor: default;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      /* Animated Techy Background */
+      .bg-animation {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+        background: linear-gradient(
+          135deg,
+          #0a0a0a 0%,
+          #1a1a2e 25%,
+          #16213e 50%,
+          #0f3460 75%,
+          #0a0a0a 100%
+        );
+      }
+
+      .bg-animation::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: radial-gradient(
+            circle at 25% 25%,
+            #00d4ff 0px,
+            transparent 2px
+          ),
+          radial-gradient(circle at 75% 75%, #00ff88 0px, transparent 2px),
+          radial-gradient(circle at 50% 50%, #ff0080 0px, transparent 1px);
+        background-size: 200px 200px, 150px 150px, 100px 100px;
+        animation: bgMove 20s linear infinite;
+        opacity: 0.1;
+      }
+
+      .bg-animation::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            transparent 24%,
+            rgba(0, 212, 255, 0.05) 25%,
+            rgba(0, 212, 255, 0.05) 26%,
+            transparent 27%,
+            transparent 74%,
+            rgba(0, 212, 255, 0.05) 75%,
+            rgba(0, 212, 255, 0.05) 76%,
+            transparent 77%
+          ),
+          linear-gradient(
+            transparent 24%,
+            rgba(0, 212, 255, 0.05) 25%,
+            rgba(0, 212, 255, 0.05) 26%,
+            transparent 27%,
+            transparent 74%,
+            rgba(0, 212, 255, 0.05) 75%,
+            rgba(0, 212, 255, 0.05) 76%,
+            transparent 77%
+          );
+        background-size: 50px 50px;
+        animation: gridMove 15s linear infinite;
+      }
+
+      @keyframes bgMove {
+        0% {
+          transform: translate(0, 0);
+        }
+        100% {
+          transform: translate(-200px, -200px);
+        }
+      }
+
+      @keyframes gridMove {
+        0% {
+          background-position: 0 0, 0 0;
+        }
+        100% {
+          background-position: 50px 50px, 25px 25px;
+        }
+      }
+
+      /* Matrix-like falling code effect */
+      .matrix {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+        overflow: hidden;
+      }
+
+      .matrix-column {
+        position: absolute;
+        top: -100px;
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        color: #00d4ff;
+        text-shadow: 0 0 5px #00d4ff;
+        animation: matrix-fall linear infinite;
+        opacity: 0.3;
+      }
+
+      @keyframes matrix-fall {
+        0% {
+          transform: translateY(-100px);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.3;
+        }
+        90% {
+          opacity: 0.3;
+        }
+        100% {
+          transform: translateY(100vh);
+          opacity: 0;
+        }
+      }
+
+      .container {
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 20px;
+        position: relative;
+        z-index: 1;
+      }
+
+      h1 {
+        text-align: center;
+        color: #00d4ff;
+        font-size: 3em;
+        margin-bottom: 10px;
+        text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        font-weight: 700;
+      }
+
+      .subtitle {
+        text-align: center;
+        color: #b8c5d1;
+        font-size: 1.3em;
+        margin-bottom: 40px;
+        font-weight: 300;
+      }
+
+      .diagram-container {
+        position: relative;
+        background: rgba(30, 30, 30, 0.9);
+        border: 2px solid #333;
+        border-radius: 20px;
+        padding: 80px 60px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+        min-height: 1350px;
+        margin-bottom: 40px;
+        backdrop-filter: blur(10px);
+      }
+
+      /* Grid Layout System */
+      .layer {
+        position: absolute;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* Component Styles */
+      .component {
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
+        position: relative;
+      }
+
+      .component:hover {
+        transform: scale(1.15);
+        z-index: 100;
+      }
+
+      .node {
+        background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+        border: 2px solid #555;
+        border-radius: 20px;
+        padding: 20px;
+        text-align: center;
+        font-weight: 600;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+        min-width: 180px;
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.4s ease;
+        color: #ffffff;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .node::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.1),
+          transparent
+        );
+        transition: left 0.6s ease;
+      }
+
+      .component:hover .node::before {
+        left: 100%;
+      }
+
+      .component:hover .node {
+        background: linear-gradient(145deg, #00d4ff, #0099cc);
+        color: #000000;
+        box-shadow: 0 15px 35px rgba(0, 212, 255, 0.4);
+        border-color: #00d4ff;
+        transform: translateY(-5px);
+      }
+
+      /* Specific layer positioning with better alignment */
+      .start-layer {
+        top: 50px;
+      }
+      .user-layer {
+        top: 200px;
+      }
+      .input-layer {
+        top: 350px;
+        justify-content: space-around;
+        padding: 0 300px;
+      }
+      .controller-layer {
+        top: 500px;
+      }
+      .mode-layer {
+        top: 650px;
+      }
+      .processing-layer {
+        top: 800px;
+        justify-content: space-between;
+        padding: 0 100px;
+      }
+      .storage-layer {
+        top: 950px;
+        justify-content: space-around;
+        padding: 0 350px;
+      }
+      .output-layer {
+        top: 1100px;
+        justify-content: space-around;
+        padding: 0 300px;
+      }
+      .exit-layer {
+        top: 1250px;
+      }
+
+      /* Specific component styles */
+      .start-component .node {
+        background: linear-gradient(145deg, #27ae60, #229954);
+        border-color: #27ae60;
+        color: white;
+        font-size: 1.2em;
+        min-width: 200px;
+        cursor: pointer;
+      }
+
+      .start-component:hover .node {
+        background: linear-gradient(145deg, #229954, #1e8449);
+        transform: scale(1.1) translateY(-5px);
+        box-shadow: 0 0 30px rgba(39, 174, 96, 0.6);
+      }
+
+      .user-component .node {
+        background: linear-gradient(145deg, #ff6b6b, #ee5a52);
+        border-color: #ff6b6b;
+        color: white;
+        font-size: 1.2em;
+        min-width: 200px;
+      }
+
+      .input-component .node {
+        background: linear-gradient(145deg, #4ecdc4, #44a08d);
+        border-color: #4ecdc4;
+        color: white;
+      }
+
+      .controller-component .node {
+        background: linear-gradient(145deg, #45b7d1, #2980b9);
+        border-color: #45b7d1;
+        color: white;
+        font-size: 1.1em;
+        min-width: 280px;
+        min-height: 100px;
+      }
+
+      .mode-component .node {
+        background: linear-gradient(145deg, #f39c12, #e67e22);
+        border-color: #f39c12;
+        color: white;
+        min-width: 220px;
+      }
+
+      .processing-component .node {
+        background: linear-gradient(145deg, #9b59b6, #8e44ad);
+        border-color: #9b59b6;
+        color: white;
+        min-width: 170px;
+      }
+
+      .storage-component .node {
+        background: linear-gradient(145deg, #34495e, #2c3e50);
+        border-color: #34495e;
+        color: white;
+        min-width: 190px;
+      }
+
+      .output-component .node {
+        background: linear-gradient(145deg, #e74c3c, #c0392b);
+        border-color: #e74c3c;
+        color: white;
+      }
+
+      .exit-component .node {
+        background: linear-gradient(145deg, #e74c3c, #c0392b);
+        border-color: #e74c3c;
+        color: white;
+        font-size: 1.2em;
+        min-width: 200px;
+        cursor: pointer;
+      }
+
+      .exit-component:hover .node {
+        background: linear-gradient(145deg, #c0392b, #a93226);
+        transform: scale(1.1) translateY(-5px);
+        box-shadow: 0 0 30px rgba(231, 76, 60, 0.6);
+      }
+
+      /* Enhanced Connection lines - HIDDEN BY DEFAULT */
+      .connections {
+        position: absolute;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+      }
+
+      .connection-strip {
+        opacity: 0;
+        transition: all 0.4s ease;
+        filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.3));
+        stroke-width: 3;
+        fill: none;
+        stroke-linecap: round;
+      }
+
+      .connection-strip.active {
+        opacity: 1;
+        stroke-width: 4;
+        filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+        animation: pulse-strip 2s ease-in-out infinite;
+      }
+
+      @keyframes pulse-strip {
+        0%,
+        100% {
+          stroke-width: 4;
+        }
+        50% {
+          stroke-width: 5;
+        }
+      }
+
+      /* Tooltip */
+      .tooltip {
+        position: fixed;
+        background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+        color: #ffffff;
+        padding: 15px 20px;
+        border-radius: 12px;
+        font-size: 14px;
+        max-width: 350px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 1000;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        border: 1px solid #444;
+        backdrop-filter: blur(10px);
+      }
+
+      .tooltip.show {
+        opacity: 1;
+      }
+
+      /* Info Panel */
+      .info-panel {
+        background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+        border: 2px solid #333;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+        color: #ffffff;
+        position: relative;
+        z-index: 1;
+        margin-bottom: 30px;
+      }
+
+      .info-panel h3 {
+        color: #00d4ff;
+        margin-bottom: 25px;
+        font-size: 2em;
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+      }
+
+      .tech-stack h4 {
+        color: #4ecdc4;
+        margin-bottom: 15px;
+        font-size: 1.4em;
+      }
+
+      .tech-stack ul {
+        list-style: none;
+      }
+
+      .tech-stack li {
+        background: linear-gradient(90deg, #333, #2a2a2a);
+        margin: 10px 0;
+        padding: 15px 20px;
+        border-left: 4px solid #00d4ff;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        color: #ffffff;
+      }
+
+      .tech-stack li:hover {
+        transform: translateX(15px);
+        background: linear-gradient(90deg, #444, #333);
+        box-shadow: 0 5px 15px rgba(0, 212, 255, 0.2);
+      }
+
+      /* Enhanced hover effects */
+      .component::after {
+        content: "";
+        position: absolute;
+        top: -3px;
+        left: -3px;
+        right: -3px;
+        bottom: -3px;
+        background: linear-gradient(45deg, #00d4ff, #00a8cc);
+        border-radius: 23px;
+        opacity: 0;
+        z-index: -1;
+        transition: opacity 0.3s ease;
+      }
+
+      .component:hover::after {
+        opacity: 0.6;
+      }
+
+      .highlighted-connection .node {
+        background: linear-gradient(145deg, #ffd700, #ffa500) !important;
+        color: #000000 !important;
+        transform: scale(1.1) translateY(-5px);
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.6) !important;
+        border-color: #ffd700 !important;
+      }
+
+      .pulsing {
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1200px) {
+        .diagram-container {
+          padding: 60px 40px;
+        }
+        .input-layer,
+        .storage-layer,
+        .output-layer {
+          padding: 0 200px;
+        }
+        .processing-layer {
+          padding: 0 50px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .diagram-container {
+          padding: 40px 20px;
+          min-height: 1750px;
+        }
+        .node {
+          min-width: 140px;
+          font-size: 0.9em;
+          padding: 15px;
+        }
+        .input-layer,
+        .storage-layer,
+        .output-layer,
+        .processing-layer {
+          flex-direction: column;
+          gap: 30px;
+          padding: 0;
+        }
+        .processing-layer {
+          top: 800px;
+          height: 350px;
+        }
+        .storage-layer {
+          top: 1170px;
+        }
+        .output-layer {
+          top: 1310px;
+        }
+        .exit-layer {
+          top: 1450px;
+        }
+      }
+
+      /* Enhanced Scrollbar */
+      ::-webkit-scrollbar {
+        width: 12px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #1a1a1a;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #00d4ff;
+        border-radius: 6px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #0099cc;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Animated Techy Background -->
+    <div class="bg-animation"></div>
+
+    <!-- Matrix Effect -->
+    <div class="matrix" id="matrix"></div>
+
+    <div class="container">
+      <h1>Smart Glasses System Architecture</h1>
+      <p class="subtitle">
+        Interactive Flow Diagram - Hover over components to see connections and
+        details
+      </p>
+
+      <div class="diagram-container">
+        <!-- System Start Layer -->
+        <div class="layer start-layer">
+          <div
+            class="component start-component"
+            id="system-start"
+            data-tooltip="System Initialization - Powers up and initializes all Smart Glasses modules and components for operation"
+          >
+            <div class="node">🚀 System Start<br /><small>Initialize</small></div>
+          </div>
+        </div>
+
+        <!-- User Layer -->
+        <div class="layer user-layer">
+          <div
+            class="component user-component"
+            id="user"
+            data-tooltip="User interacts through voice commands and receives audio/visual feedback from the Smart Glasses system"
+          >
+            <div class="node">👤 User<br /><small>Voice Commands</small></div>
+          </div>
+        </div>
+
+        <!-- Input Layer -->
+        <div class="layer input-layer">
+          <div
+            class="component input-component"
+            id="microphone"
+            data-tooltip="Speech Recognition using Google API - Captures voice commands and converts them to text for processing"
+          >
+            <div class="node">
+              🎤 Microphone<br /><small>Speech Recognition</small>
+            </div>
+          </div>
+          <div
+            class="component input-component"
+            id="camera"
+            data-tooltip="Video Processing - Captures frames for object detection, text reading, and face recognition using OpenCV"
+          >
+            <div class="node">📹 Camera<br /><small>Video Input</small></div>
+          </div>
+        </div>
+
+        <!-- Main Controller Layer -->
+        <div class="layer controller-layer">
+          <div
+            class="component controller-component"
+            id="main-controller"
+            data-tooltip="IntegratedSmartGlasses class - Orchestrates all modules, manages mode switching, and handles unified command parsing"
+          >
+            <div class="node">
+              🧠 Main Controller<br /><small>Unified Command Dispatcher</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mode Selection Layer -->
+        <div class="layer mode-layer">
+          <div
+            class="component mode-component"
+            id="mode-switch"
+            data-tooltip="Mode switching system - Allows switching between Detection, GPS, Text Reading, and Face Recognition modes via voice commands"
+          >
+            <div class="node">
+              ⚙️ Mode Switch<br /><small>System Modes</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Processing Modules Layer -->
+        <div class="layer processing-layer">
+          <div
+            class="component processing-component"
+            id="object-detection"
+            data-tooltip="YOLOv8 Object Detection - Real-time object recognition with confidence scoring and position tracking"
+          >
+            <div class="node">
+              🔍 Object Detection<br /><small>YOLOv8</small>
+            </div>
+          </div>
+          <div
+            class="component processing-component"
+            id="text-reading"
+            data-tooltip="Tesseract OCR - Extracts and reads text from camera feed with preprocessing and multiple language support"
+          >
+            <div class="node">
+              📖 Text Reading<br /><small>Tesseract OCR</small>
+            </div>
+          </div>
+          <div
+            class="component processing-component"
+            id="face-recognition"
+            data-tooltip="Face Recognition using dlib - Identifies known faces, learns new faces, and maintains persistent face database"
+          >
+            <div class="node">
+              👁️ Face Recognition<br /><small>face_recognition</small>
+            </div>
+          </div>
+          <div
+            class="component processing-component"
+            id="gps-navigation"
+            data-tooltip="GPS Navigation - Location services, navigation, and distance calculation using web APIs for location-based features"
+          >
+            <div class="node">
+              🗺️ GPS Navigation<br /><small>Web API</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Storage Layer -->
+        <div class="layer storage-layer">
+          <div
+            class="component storage-component"
+            id="face-database"
+            data-tooltip="Face Database - Stores known face encodings using Pickle and JSON for persistent facial recognition data"
+          >
+            <div class="node">
+              💾 Face Database<br /><small>Pickle/JSON</small>
+            </div>
+          </div>
+          <div
+            class="component storage-component"
+            id="location-data"
+            data-tooltip="Location Storage - Saves locations and navigation data for GPS functionality and route management"
+          >
+            <div class="node">
+              📍 Location Data<br /><small>Local Storage</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Layer -->
+        <div class="layer output-layer">
+          <div
+            class="component output-component"
+            id="tts-output"
+            data-tooltip="Text-to-Speech Engine - Converts system responses to speech with adjustable rate and voice selection using pyttsx3"
+          >
+            <div class="node">🔊 TTS Output<br /><small>pyttsx3</small></div>
+          </div>
+          <div
+            class="component output-component"
+            id="display-overlay"
+            data-tooltip="Visual Display - Shows detection boxes, system status, and overlays on video feed using OpenCV"
+          >
+            <div class="node">
+              📺 Display Overlay<br /><small>OpenCV</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Exit Command Layer -->
+        <div class="layer exit-layer">
+          <div
+            class="component exit-component"
+            id="exit-command"
+            data-tooltip="System Exit Command - Safely shuts down all modules and terminates the Smart Glasses system"
+          >
+            <div class="node">
+              🔴 System Exit<br /><small>Shutdown Command</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Connection Strips - Better positioned and aligned with reduced width -->
+        <svg class="connections" width="100%" height="100%">
+          <!-- System Start to User -->
+          <path
+            class="connection-strip"
+            d="M 800,140 L 800,190"
+            stroke="#27ae60"
+            data-from="system-start"
+            data-to="user"
+          />
+
+          <!-- User to inputs -->
+          <path
+            class="connection-strip"
+            d="M 800,290 Q 650,320 520,340"
+            stroke="#ff4757"
+            data-from="user"
+            data-to="microphone"
+          />
+          <path
+            class="connection-strip"
+            d="M 800,290 Q 950,320 1080,340"
+            stroke="#2ed573"
+            data-from="user"
+            data-to="camera"
+          />
+
+          <!-- Inputs to controller -->
+          <path
+            class="connection-strip"
+            d="M 520,420 Q 650,460 780,490"
+            stroke="#3742fa"
+            data-from="microphone"
+            data-to="main-controller"
+          />
+          <path
+            class="connection-strip"
+            d="M 1080,420 Q 950,460 820,490"
+            stroke="#f39801"
+            data-from="camera"
+            data-to="main-controller"
+          />
+
+          <!-- Controller to mode switch -->
+          <path
+            class="connection-strip"
+            d="M 800,570 L 800,640"
+            stroke="#a4b0be"
+            data-from="main-controller"
+            data-to="mode-switch"
+          />
+
+          <!-- Mode switch to processing modules -->
+          <path
+            class="connection-strip"
+            d="M 750,720 Q 550,760 370,790"
+            stroke="#ff6348"
+            data-from="mode-switch"
+            data-to="object-detection"
+          />
+          <path
+            class="connection-strip"
+            d="M 780,720 Q 680,760 600,790"
+            stroke="#26de81"
+            data-from="mode-switch"
+            data-to="text-reading"
+          />
+          <path
+            class="connection-strip"
+            d="M 820,720 Q 920,760 1000,790"
+            stroke="#4834d4"
+            data-from="mode-switch"
+            data-to="face-recognition"
+          />
+          <path
+            class="connection-strip"
+            d="M 850,720 Q 1075,760 1230,790"
+            stroke="#f0932b"
+            data-from="mode-switch"
+            data-to="gps-navigation"
+          />
+
+          <!-- Processing to storage -->
+          <path
+            class="connection-strip"
+            d="M 1000,870 Q 850,910 670,940"
+            stroke="#eb4d4b"
+            data-from="face-recognition"
+            data-to="face-database"
+          />
+          <path
+            class="connection-strip"
+            d="M 1230,870 Q 1125,910 930,940"
+            stroke="#6ab04c"
+            data-from="gps-navigation"
+            data-to="location-data"
+          />
+
+          <!-- Processing to output -->
+          <path
+            class="connection-strip"
+            d="M 370,870 Q 425,1010 520,1090"
+            stroke="#fd79a8"
+            data-from="object-detection"
+            data-to="tts-output"
+          />
+          <path
+            class="connection-strip"
+            d="M 600,870 Q 560,1010 520,1090"
+            stroke="#fdcb6e"
+            data-from="text-reading"
+            data-to="tts-output"
+          />
+          <path
+            class="connection-strip"
+            d="M 1000,870 Q 1040,1010 1080,1090"
+            stroke="#e17055"
+            data-from="face-recognition"
+            data-to="display-overlay"
+          />
+          <path
+            class="connection-strip"
+            d="M 1230,870 Q 1155,1010 1080,1090"
+            stroke="#00b894"
+            data-from="gps-navigation"
+            data-to="display-overlay"
+          />
+
+          <!-- Cross connections -->
+          <path
+            class="connection-strip"
+            d="M 370,870 Q 725,1010 1080,1090"
+            stroke="#a29bfe"
+            data-from="object-detection"
+            data-to="display-overlay"
+          />
+          <path
+            class="connection-strip"
+            d="M 600,870 Q 840,1010 1080,1090"
+            stroke="#fd79a8"
+            data-from="text-reading"
+            data-to="display-overlay"
+          />
+          <path
+            class="connection-strip"
+            d="M 1000,870 Q 760,1010 520,1090"
+            stroke="#00cec9"
+            data-from="face-recognition"
+            data-to="tts-output"
+          />
+          <path
+            class="connection-strip"
+            d="M 1230,870 Q 875,1010 520,1090"
+            stroke="#55a3ff"
+            data-from="gps-navigation"
+            data-to="tts-output"
+          />
+
+          <!-- Output to exit command -->
+          <path
+            class="connection-strip"
+            d="M 520,1170 Q 660,1210 800,1240"
+            stroke="#e74c3c"
+            data-from="tts-output"
+            data-to="exit-command"
+          />
+          <path
+            class="connection-strip"
+            d="M 1080,1170 Q 940,1210 800,1240"
+            stroke="#c0392b"
+            data-from="display-overlay"
+            data-to="exit-command"
+          />
+
+          <!-- Output back to user -->
+          <path
+            class="connection-strip"
+            d="M 570,1170 Q 620,1270 Q 750,300 800,290"
+            stroke="#00ff88"
+            data-from="tts-output"
+            data-to="user"
+            opacity="0.6"
+          />
+          <path
+            class="connection-strip"
+            d="M 1030,1170 Q 980,1270 Q 850,300 800,290"
+            stroke="#ff9ff3"
+            data-from="display-overlay"
+            data-to="user"
+            opacity="0.6"
+          />
+        </svg>
+      </div>
+
+      <!-- Tooltip -->
+      <div class="tooltip" id="tooltip"></div>
+
+      <!-- System Info Panel -->
+      <div class="info-panel">
+        <h3>System Architecture Overview</h3>
+        <div class="tech-stack">
+          <h4>Technologies Used:</h4>
+          <ul>
+            <li>
+              <strong>YOLOv8:</strong> Real-time object detection and
+              recognition
+            </li>
+            <li>
+              <strong>Tesseract OCR:</strong> Text recognition and reading
+              capabilities
+            </li>
+            <li>
+              <strong>face_recognition:</strong> Facial recognition with dlib
+              backend
+            </li>
+            <li>
+              <strong>OpenCV:</strong> Computer vision and image processing
+            </li>
+            <li><strong>pyttsx3:</strong> Text-to-speech synthesis engine</li>
+            <li>
+              <strong>SpeechRecognition:</strong> Voice command processing
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Create Matrix Effect
+      function createMatrixEffect() {
+        const matrix = document.getElementById("matrix");
+        const columns = Math.floor(window.innerWidth / 20);
+
+        for (let i = 0; i < columns; i++) {
+          const column = document.createElement("div");
+          column.className = "matrix-column";
+          column.style.left = i * 20 + "px";
+          column.style.animationDelay = Math.random() * 5 + "s";
+          column.style.animationDuration = Math.random() * 10 + 10 + "s";
+
+          // Random tech characters
+          const chars = "01010101ABCDEF{}[]()<>+-*/=!@#$%^&*";
+          let text = "";
+          for (let j = 0; j < 20; j++) {
+            text += chars[Math.floor(Math.random() * chars.length)] + "<br>";
+          }
+          column.innerHTML = text;
+
+          matrix.appendChild(column);
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize matrix effect
+        createMatrixEffect();
+
+        const components = document.querySelectorAll(".component");
+        const tooltip = document.getElementById("tooltip");
+
+        let mouseX = 0;
+        let mouseY = 0;
+
+        document.addEventListener("mousemove", function (e) {
+          mouseX = e.clientX;
+          mouseY = e.clientY;
+        });
+
+        components.forEach(component => {
+          component.addEventListener("mouseenter", function (e) {
+            const tooltipText = this.getAttribute("data-tooltip");
+            if (tooltipText) {
+              tooltip.textContent = tooltipText;
+              tooltip.classList.add("show");
+              updateTooltipPosition();
+            }
+
+            highlightConnections(this.id);
+            this.classList.add("pulsing");
+          });
+
+          component.addEventListener("mouseleave", function () {
+            tooltip.classList.remove("show");
+            removeHighlights();
+            this.classList.remove("pulsing");
+          });
+
+          component.addEventListener("mousemove", updateTooltipPosition);
+
+          component.addEventListener("click", function () {
+            if (this.id === "system-start") {
+              initializeSystem();
+            } else if (this.id === "exit-command") {
+              shutdownSystem();
+            } else {
+              showDetailedInfo(this.id);
+            }
+          });
+        });
+
+        function updateTooltipPosition() {
+          const offset = 15;
+          tooltip.style.left = mouseX + offset + "px";
+          tooltip.style.top = mouseY + offset + "px";
+
+          const rect = tooltip.getBoundingClientRect();
+          if (rect.right > window.innerWidth) {
+            tooltip.style.left = mouseX - rect.width - offset + "px";
+          }
+          if (rect.bottom > window.innerHeight) {
+            tooltip.style.top = mouseY - rect.height - offset + "px";
+          }
+        }
+
+        function highlightConnections(componentId) {
+          // First remove all active strips
+          const allStrips = document.querySelectorAll(".connection-strip");
+          allStrips.forEach(strip => {
+            strip.classList.remove("active");
+          });
+
+          // Show and activate strips connected to hovered component
+          const connectedStrips = document.querySelectorAll(
+            `[data-from="${componentId}"], [data-to="${componentId}"]`
+          );
+          connectedStrips.forEach(strip => {
+            strip.classList.add("active");
+          });
+
+          // Highlight connected components
+          const connectionMap = {
+            "system-start": ["user"],
+            user: ["microphone", "camera"],
+            microphone: ["main-controller"],
+            camera: ["main-controller"],
+            "main-controller": ["mode-switch"],
+            "mode-switch": [
+              "object-detection",
+              "text-reading",
+              "face-recognition",
+              "gps-navigation",
+            ],
+            "object-detection": ["tts-output", "display-overlay"],
+            "text-reading": ["tts-output", "display-overlay"],
+            "face-recognition": [
+              "face-database",
+              "tts-output",
+              "display-overlay",
+            ],
+            "gps-navigation": [
+              "location-data",
+              "tts-output",
+              "display-overlay",
+            ],
+            "tts-output": ["user", "exit-command"],
+            "display-overlay": ["user", "exit-command"],
+            "exit-command": [],
+          };
+
+          if (connectionMap[componentId]) {
+            connectionMap[componentId].forEach(connectedId => {
+              const connectedComponent = document.getElementById(connectedId);
+              if (connectedComponent) {
+                connectedComponent.classList.add("highlighted-connection");
+              }
+            });
+          }
+
+          Object.keys(connectionMap).forEach(key => {
+            if (connectionMap[key].includes(componentId)) {
+              const sourceComponent = document.getElementById(key);
+              if (sourceComponent) {
+                sourceComponent.classList.add("highlighted-connection");
+              }
+            }
+          });
+        }
+
+        function removeHighlights() {
+          // Hide all strips when not hovering
+          const allStrips = document.querySelectorAll(".connection-strip");
+          allStrips.forEach(strip => {
+            strip.classList.remove("active");
+          });
+
+          components.forEach(component => {
+            component.classList.remove("highlighted-connection", "pulsing");
+          });
+        }
+
+        function initializeSystem() {
+          const modal = document.createElement("div");
+          modal.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+                    color: white;
+                    padding: 40px;
+                    border-radius: 15px;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+                    border: 2px solid #27ae60;
+                    max-width: 500px;
+                    z-index: 10000;
+                    text-align: center;
+                `;
+
+          modal.innerHTML = `
+                    <h3 style="color: #27ae60; margin-bottom: 20px; font-size: 1.8em;">🚀 System Initialization</h3>
+                    <p style="line-height: 1.6; margin-bottom: 30px; font-size: 1.1em;">Initializing Smart Glasses system components...</p>
+                    <div style="width: 100%; height: 6px; background: #333; border-radius: 3px; overflow: hidden; margin-bottom: 20px;">
+                        <div style="width: 0%; height: 100%; background: #27ae60; border-radius: 3px; animation: startup-progress 4s ease-in-out forwards;"></div>
+                    </div>
+                    <p style="color: #7f8c8d; font-size: 0.9em;" id="startup-status">Initializing modules...</p>
+                `;
+
+          // Add the animation keyframes
+          const style = document.createElement("style");
+          style.textContent = `
+                    @keyframes startup-progress {
+                        0% { width: 0%; }
+                        25% { width: 25%; }
+                        50% { width: 50%; }
+                        75% { width: 75%; }
+                        100% { width: 100%; }
+                    }
+                `;
+          document.head.appendChild(style);
+
+          document.body.appendChild(modal);
+
+          const statusElement = modal.querySelector("#startup-status");
+          const statusMessages = [
+            "Initializing camera modules...",
+            "Loading speech recognition...",
+            "Starting object detection...",
+            "Initializing face recognition...",
+            "Loading GPS navigation...",
+            "System ready!"
+          ];
+
+          let messageIndex = 0;
+          const statusInterval = setInterval(() => {
+            if (messageIndex < statusMessages.length - 1) {
+              statusElement.textContent = statusMessages[messageIndex];
+              messageIndex++;
+            } else {
+              statusElement.textContent = statusMessages[statusMessages.length - 1];
+              statusElement.style.color = "#27ae60";
+              clearInterval(statusInterval);
+              
+              setTimeout(() => {
+                modal.remove();
+              }, 1500);
+            }
+          }, 800);
+        }
+
+        function shutdownSystem() {
+          const modal = document.createElement("div");
+          modal.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+                    color: white;
+                    padding: 40px;
+                    border-radius: 15px;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+                    border: 2px solid #e74c3c;
+                    max-width: 500px;
+                    z-index: 10000;
+                    text-align: center;
+                `;
+
+          modal.innerHTML = `
+                    <h3 style="color: #e74c3c; margin-bottom: 20px; font-size: 1.8em;">🔴 System Shutdown</h3>
+                    <p style="line-height: 1.6; margin-bottom: 30px; font-size: 1.1em;">Are you sure you want to shut down the Smart Glasses system?</p>
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button onclick="confirmShutdown()" style="background: #e74c3c; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1em;">Yes, Shutdown</button>
+                        <button onclick="this.closest('div').remove()" style="background: #34495e; color: white; border: none; padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 1em;">Cancel</button>
+                    </div>
+                `;
+
+          document.body.appendChild(modal);
+        }
+
+        window.confirmShutdown = function () {
+          const modal = document.querySelector('div[style*="z-index: 10000"]');
+          if (modal) {
+            modal.innerHTML = `
+                        <h3 style="color: #e74c3c; margin-bottom: 20px; font-size: 1.8em;">🔴 Shutting Down...</h3>
+                        <p style="line-height: 1.6; margin-bottom: 20px; font-size: 1.1em;">Smart Glasses system is safely shutting down all modules...</p>
+                        <div style="width: 100%; height: 4px; background: #333; border-radius: 2px; overflow: hidden; margin-bottom: 20px;">
+                            <div style="width: 0%; height: 100%; background: #e74c3c; border-radius: 2px; animation: shutdown-progress 3s ease-in-out forwards;"></div>
+                        </div>
+                        <p style="color: #7f8c8d; font-size: 0.9em;">System will close automatically...</p>
+                    `;
+
+            // Add the animation keyframes
+            const style = document.createElement("style");
+            style.textContent = `
+                        @keyframes shutdown-progress {
+                            0% { width: 0%; }
+                            100% { width: 100%; }
+                        }
+                    `;
+            document.head.appendChild(style);
+
+            setTimeout(() => {
+              document.body.style.transition = "opacity 1s ease";
+              document.body.style.opacity = "0";
+              setTimeout(() => {
+                window.close() ||
+                  window.history.back() ||
+                  (document.body.innerHTML =
+                    '<div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 2em; color: #e74c3c;">Smart Glasses System Offline</div>');
+              }, 1000);
+            }, 3000);
+          }
+        };
+
+        function showDetailedInfo(componentId) {
+          const detailMap = {
+            "system-start": "System Initialization: Powers up all Smart Glasses components and prepares the system for operation",
+            user: "User Interface: Interacts through voice commands and receives audio/visual feedback",
+            microphone:
+              "Speech Recognition: Converts voice to commands using Google Speech API with offline fallback",
+            camera:
+              "Video Input: Captures frames for computer vision processing at optimal resolution",
+            "main-controller":
+              "System Orchestrator: Manages all modules, handles threading, and routes commands efficiently",
+            "mode-switch":
+              "Mode Management: Seamlessly switches between Detection, GPS, Text Reading, and Face Recognition modes",
+            "object-detection":
+              "YOLOv8 Integration: Real-time object detection with confidence scoring and bounding box coordinates",
+            "text-reading":
+              "OCR Processing: Text extraction and reading with Tesseract, including preprocessing and language support",
+            "face-recognition":
+              "Facial Recognition: Person identification using dlib face encodings with learning capabilities",
+            "gps-navigation":
+              "Location Services: GPS functionality, navigation features, and distance calculations",
+            "face-database":
+              "Face Storage: Persistent storage for known face encodings using Pickle serialization",
+            "location-data":
+              "Location Storage: Saved locations and navigation data for GPS functionality",
+            "tts-output":
+              "Speech Synthesis: Converts system responses to speech with adjustable speed and voice options",
+            "display-overlay":
+              "Visual Output: Shows detection results, system status, and overlays on video feed",
+            "exit-command":
+              "System Shutdown: Safely terminates all processes and shuts down the Smart Glasses system",
+          };
+
+          const modal = document.createElement("div");
+          modal.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: linear-gradient(145deg, #2d2d2d, #1a1a1a);
+                    color: white;
+                    padding: 30px;
+                    border-radius: 15px;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+                    border: 2px solid #00d4ff;
+                    max-width: 500px;
+                    z-index: 10000;
+                `;
+
+          modal.innerHTML = `
+                    <h3 style="color: #00d4ff; margin-bottom: 15px; font-size: 1.5em;">${componentId
+                      .replace("-", " ")
+                      .replace(/\b\w/g, l => l.toUpperCase())}</h3>
+                    <p style="line-height: 1.6; margin-bottom: 20px;">${
+                      detailMap[componentId] ||
+                      "Component information not available"
+                    }</p>
+                    <button onclick="this.parentElement.remove()" style="background: #00d4ff; color: black; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">Close</button>
+                `;
+
+          document.body.appendChild(modal);
+        }
+
+        // Page loading animation
+        document.body.style.opacity = "0";
+        setTimeout(() => {
+          document.body.style.transition = "opacity 0.5s ease";
+          document.body.style.opacity = "1";
+        }, 100);
+      });
+    </script>
+  </body>
+</html>
